@@ -42,6 +42,7 @@ export const AppStore = signalStore(
           return service.fetchData().pipe(
             tapResponse({
               next: (response: any) => {
+                console.log(response);
                 patchState(store, { ...response, loading: false });
               },
               error: () => {

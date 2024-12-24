@@ -1,0 +1,21 @@
+@if (!loading()) {
+<form>
+  <mat-form-field>
+    <mat-label>Select a hat</mat-label>
+    <input
+      type="text"
+      aria-label="Select a hat"
+      matInput
+      [formControl]="myControl"
+      [matAutocomplete]="auto"
+    />
+    <mat-autocomplete #auto="matAutocomplete">
+      @for (option of filteredOptions | async; track $index) {
+      <mat-option [value]="option">{{ option }}</mat-option>
+      }
+    </mat-autocomplete>
+  </mat-form-field>
+</form>
+} @else {
+<h1>Loading...</h1>
+}
