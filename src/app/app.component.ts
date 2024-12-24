@@ -11,6 +11,6 @@ export class AppComponent implements OnInit {
   readonly #store = inject(AppStore);
 
   ngOnInit(): void {
-    this.#store.fetchAdvice();
+    this.#store.fetchData();
   }
 }

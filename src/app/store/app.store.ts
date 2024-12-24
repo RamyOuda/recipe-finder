@@ -7,17 +7,33 @@ import { AppService } from './app.service';
 
 interface AppState {
   loading: boolean;
+  hats: any[];
+  cloaks: any[];
+  belts: any[];
+  boots: any[];
+  amulets: any[];
+  rings: any[];
+  shields: any[];
+  weapons: any[];
 }
 
 const initialState: AppState = {
   loading: false,
+  hats: [],
+  cloaks: [],
+  belts: [],
+  boots: [],
+  amulets: [],
+  rings: [],
+  shields: [],
+  weapons: [],
 };
 
 export const AppStore = signalStore(
   { providedIn: 'root' },
   withState(initialState),
   withMethods((store, service = inject(AppService)) => ({
-    fetchAdvice: rxMethod<void>(
+    fetchData: rxMethod<void>(
       pipe(
         tap(() => {
           patchState(store, { loading: true });
@@ -25,9 +41,8 @@ export const AppStore = signalStore(
         switchMap(() => {
           return service.fetchData().pipe(
             tapResponse({
-              next: (response) => {
-                console.log(response);
-                patchState(store, { loading: false });
+              next: (response: any) => {
+                patchState(store, { ...response, loading: false });
               },
               error: () => {
                 patchState(store, initialState);
