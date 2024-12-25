@@ -4,29 +4,17 @@ import { patchState, signalStore, withMethods, withState } from '@ngrx/signals';
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
 import { EMPTY, pipe, switchMap, tap } from 'rxjs';
 import { AppService } from './app.service';
+import { HttpErrorResponse } from '@angular/common/http';
+import { FormattedItems } from '../models/app.model';
 
 interface AppState {
   loading: boolean;
-  hats: any[];
-  cloaks: any[];
-  belts: any[];
-  boots: any[];
-  amulets: any[];
-  rings: any[];
-  shields: any[];
-  weapons: any[];
+  formattedItems: FormattedItems | null;
 }
 
 const initialState: AppState = {
   loading: false,
-  hats: [],
-  cloaks: [],
-  belts: [],
-  boots: [],
-  amulets: [],
-  rings: [],
-  shields: [],
-  weapons: [],
+  formattedItems: null,
 };
 
 export const AppStore = signalStore(
@@ -41,11 +29,14 @@ export const AppStore = signalStore(
         switchMap(() => {
           return service.fetchData().pipe(
             tapResponse({
-              next: (response: any) => {
-                console.log(response);
-                patchState(store, { ...response, loading: false });
+              next: (response: FormattedItems) => {
+                patchState(store, {
+                  formattedItems: response,
+                  loading: false,
+                });
               },
-              error: () => {
+              error: (err: HttpErrorResponse) => {
+                console.error(err.message);
                 patchState(store, initialState);
                 return EMPTY;
               },
