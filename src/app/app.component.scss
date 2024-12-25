@@ -1,0 +1,15 @@
+:host {
+  form {
+    display: flex;
+    flex-direction: column;
+    padding: 16px;
+
+    input {
+      border-radius: 0;
+    }
+  }
+
+  .loading {
+    padding-left: 16px;
+  }
+}

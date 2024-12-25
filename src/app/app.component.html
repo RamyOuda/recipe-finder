@@ -1,21 +1,47 @@
 @if (!loading()) {
-<form>
+<form [formGroup]="equipmentForm" (ngSubmit)="onSubmit()">
   <mat-form-field>
     <mat-label>Select a hat</mat-label>
     <input
       type="text"
       aria-label="Select a hat"
       matInput
-      [formControl]="myControl"
+      formControlName="hat"
       [matAutocomplete]="auto"
+      (focus)="onInputSelected('hat')"
     />
-    <mat-autocomplete #auto="matAutocomplete">
+    <mat-autocomplete
+      #auto="matAutocomplete"
+      [displayWith]="autocompleteDisplay"
+    >
       @for (option of filteredOptions | async; track $index) {
-      <mat-option [value]="option">{{ option }}</mat-option>
+      <mat-option [value]="option">{{ option.name }}</mat-option>
       }
     </mat-autocomplete>
   </mat-form-field>
+
+  <mat-form-field>
+    <mat-label>Select a cloak</mat-label>
+    <input
+      type="text"
+      aria-label="Select a cloak"
+      matInput
+      formControlName="cloak"
+      [matAutocomplete]="auto"
+      (focus)="onInputSelected('cloak')"
+    />
+    <mat-autocomplete
+      #auto="matAutocomplete"
+      [displayWith]="autocompleteDisplay"
+    >
+      @for (option of filteredOptions | async; track $index) {
+      <mat-option [value]="option">{{ option.name }}</mat-option>
+      }
+    </mat-autocomplete>
+  </mat-form-field>
+
+  <button mat-raised-button color="primary" type="submit">Submit</button>
 </form>
 } @else {
-<h1>Loading...</h1>
+<h1 class="loading">Loading...</h1>
 }
