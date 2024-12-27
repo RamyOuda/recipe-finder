@@ -1,47 +1,51 @@
-@if (!loading()) {
-<form [formGroup]="equipmentForm" (ngSubmit)="onSubmit()">
-  <mat-form-field>
-    <mat-label>Select a hat</mat-label>
-    <input
-      type="text"
-      aria-label="Select a hat"
-      matInput
-      formControlName="hat"
-      [matAutocomplete]="auto"
-      (focus)="onInputSelected('hat')"
-    />
-    <mat-autocomplete
-      #auto="matAutocomplete"
-      [displayWith]="autocompleteDisplay"
-    >
-      @for (option of filteredOptions | async; track $index) {
-      <mat-option [value]="option">{{ option.name }}</mat-option>
-      }
-    </mat-autocomplete>
-  </mat-form-field>
-
-  <mat-form-field>
-    <mat-label>Select a cloak</mat-label>
-    <input
-      type="text"
-      aria-label="Select a cloak"
-      matInput
-      formControlName="cloak"
-      [matAutocomplete]="auto"
-      (focus)="onInputSelected('cloak')"
-    />
-    <mat-autocomplete
-      #auto="matAutocomplete"
-      [displayWith]="autocompleteDisplay"
-    >
-      @for (option of filteredOptions | async; track $index) {
-      <mat-option [value]="option">{{ option.name }}</mat-option>
-      }
-    </mat-autocomplete>
-  </mat-form-field>
-
-  <button mat-raised-button color="primary" type="submit">Submit</button>
-</form>
+@if (loading()) {
+<div class="spinner-container">
+  <mat-spinner></mat-spinner>
+</div>
 } @else {
-<h1 class="loading">Loading...</h1>
+<section class="inputs">
+  <h2>Select Items</h2>
+
+  <form [formGroup]="equipmentForm" (ngSubmit)="onSubmit()">
+    @for (input of equipmentInputs; track input.control) {
+    <mat-form-field>
+      <mat-label>{{ input.label }}</mat-label>
+      <input
+        type="text"
+        [attr.aria-label]="input.label"
+        matInput
+        [formControlName]="input.control"
+        [matAutocomplete]="auto"
+        (focus)="onInputSelected(input.control)"
+      />
+      <mat-autocomplete
+        #auto="matAutocomplete"
+        [displayWith]="autocompleteDisplay"
+      >
+        @for (option of filteredOptions | async; track $index) {
+        <mat-option [value]="option">{{ option.name }}</mat-option>
+        }
+      </mat-autocomplete>
+    </mat-form-field>
+    }
+
+    <button mat-raised-button color="primary" type="submit">Submit</button>
+  </form>
+
+  <div class="img-container">
+    <img
+      src="OverTheMoon.png"
+      alt="Guild Emblem"
+      matTooltip="Over the Moon"
+      matTooltipPosition="above"
+    />
+  </div>
+</section>
+
+<section class="recipe">
+  <h2>Required Materials</h2>
+</section>
+
 }
+
+<footer>A site made by Nub-cakez&trade;</footer>
