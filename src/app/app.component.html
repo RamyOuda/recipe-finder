@@ -29,7 +29,14 @@
     </mat-form-field>
     }
 
-    <button mat-raised-button color="primary" type="submit">Submit</button>
+    <button
+      mat-raised-button
+      color="primary"
+      type="submit"
+      [disabled]="equipmentForm.invalid || !equipmentForm.dirty"
+    >
+      Submit
+    </button>
   </form>
 
   <div class="img-container">

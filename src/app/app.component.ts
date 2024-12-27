@@ -11,6 +11,9 @@ import {
   FormsModule,
   ReactiveFormsModule,
   FormGroup,
+  ValidatorFn,
+  AbstractControl,
+  ValidationErrors,
 } from '@angular/forms';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -57,15 +60,15 @@ export class AppComponent implements OnInit {
   ];
 
   readonly equipmentForm = new FormGroup({
-    hat: new FormControl(null),
-    cloak: new FormControl(null),
-    belt: new FormControl(null),
-    boots: new FormControl(null),
-    amulet: new FormControl(null),
-    ring1: new FormControl(null),
-    ring2: new FormControl(null),
-    shield: new FormControl(null),
-    weapon: new FormControl(null),
+    hat: new FormControl(null, this.inputValidator()),
+    cloak: new FormControl(null, this.inputValidator()),
+    belt: new FormControl(null, this.inputValidator()),
+    boots: new FormControl(null, this.inputValidator()),
+    amulet: new FormControl(null, this.inputValidator()),
+    ring1: new FormControl(null, this.inputValidator()),
+    ring2: new FormControl(null, this.inputValidator()),
+    shield: new FormControl(null, this.inputValidator()),
+    weapon: new FormControl(null, this.inputValidator()),
   });
 
   filteredOptions: Observable<any[]> = of([]);
@@ -80,7 +83,7 @@ export class AppComponent implements OnInit {
     this.#store.fetchData();
   }
 
-  onInputSelected(itemType: string) {
+  onInputSelected(itemType: string): void {
     const formControl = this.equipmentForm.get(itemType) as FormControl;
 
     this.filteredOptions = formControl.valueChanges.pipe(
@@ -93,8 +96,43 @@ export class AppComponent implements OnInit {
     return item?.name ?? '';
   }
 
-  onSubmit() {
-    console.log(this.equipmentForm.value);
+  onSubmit(): void {
+    const formValue = this.equipmentForm.value;
+    const requiredResources: {
+      resourceId: number;
+      quantity: number;
+    }[] = [];
+
+    for (const key in formValue) {
+      let value: any = formValue[key as keyof typeof formValue];
+
+      if (value === '') {
+        value = null;
+      }
+
+      if (value && typeof value === 'object') {
+        value.recipe.forEach(
+          (recipe: { item_ankama_id: number; quantity: number }) => {
+            const formattedResource = {
+              resourceId: recipe.item_ankama_id,
+              quantity: recipe.quantity,
+            };
+
+            const index: number = requiredResources.findIndex(
+              ({ resourceId }) => resourceId === formattedResource.resourceId
+            );
+
+            if (index === -1) {
+              requiredResources.push(formattedResource);
+            } else {
+              requiredResources[index].quantity += formattedResource.quantity;
+            }
+          }
+        );
+      }
+    }
+
+    console.log(requiredResources);
   }
 
   private filter(value: string | any, itemType: string): any[] {
@@ -114,5 +152,20 @@ export class AppComponent implements OnInit {
     } else {
       return [];
     }
+  }
+  private inputValidator(): ValidatorFn {
+    return (control: AbstractControl): ValidationErrors | null => {
+      let value = control.value;
+
+      if (value === '') {
+        value = null;
+      }
+
+      if (typeof value === 'object') {
+        return null;
+      } else {
+        return { notObject: { value: control.value } };
+      }
+    };
   }
 }
