@@ -1,19 +1,19 @@
+import { HttpErrorResponse } from '@angular/common/http';
 import { inject } from '@angular/core';
 import { tapResponse } from '@ngrx/operators';
 import { patchState, signalStore, withMethods, withState } from '@ngrx/signals';
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
 import { EMPTY, pipe, switchMap, tap } from 'rxjs';
+import { FormattedItems, FormattedResource } from '../models/app.model';
 import { AppService } from './app.service';
-import { HttpErrorResponse } from '@angular/common/http';
-import { FormattedItems } from '../models/app.model';
 
 interface AppState {
-  loading: boolean;
+  pageLoading: boolean;
   formattedItems: FormattedItems | null;
 }
 
 const initialState: AppState = {
-  loading: false,
+  pageLoading: false,
   formattedItems: null,
 };
 
@@ -24,7 +24,7 @@ export const AppStore = signalStore(
     fetchData: rxMethod<void>(
       pipe(
         tap(() => {
-          patchState(store, { loading: true });
+          patchState(store, { pageLoading: true });
         }),
         switchMap(() => {
           return service.fetchData().pipe(
@@ -32,12 +32,32 @@ export const AppStore = signalStore(
               next: (response: FormattedItems) => {
                 patchState(store, {
                   formattedItems: response,
-                  loading: false,
+                  pageLoading: false,
                 });
               },
               error: (err: HttpErrorResponse) => {
                 console.error(err.message);
                 patchState(store, initialState);
+                return EMPTY;
+              },
+            })
+          );
+        })
+      )
+    ),
+    fetchResources: rxMethod<FormattedResource[]>(
+      pipe(
+        tap(() => {
+          console.log('fetchResource Triggered');
+        }),
+        switchMap((resources) => {
+          return service.fetchResources(resources).pipe(
+            tapResponse({
+              next: (response: any) => {
+                console.log('Store fetchResource Response:', response);
+              },
+              error: (err: HttpErrorResponse) => {
+                console.error(err.message);
                 return EMPTY;
               },
             })

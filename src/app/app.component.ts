@@ -2,27 +2,27 @@ import { AsyncPipe } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
-  effect,
   inject,
   OnInit,
 } from '@angular/core';
 import {
+  AbstractControl,
   FormControl,
+  FormGroup,
   FormsModule,
   ReactiveFormsModule,
-  FormGroup,
-  ValidatorFn,
-  AbstractControl,
   ValidationErrors,
+  ValidatorFn,
 } from '@angular/forms';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { map, Observable, of, startWith } from 'rxjs';
-import { AppStore } from './store/app.store';
-import { MatButtonModule } from '@angular/material/button';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { map, Observable, of, startWith } from 'rxjs';
+import { FormattedResource } from './models/app.model';
+import { AppStore } from './store/app.store';
 
 @Component({
   selector: 'app-root',
@@ -45,7 +45,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 export class AppComponent implements OnInit {
   readonly #store = inject(AppStore);
   readonly formattedItems = this.#store.formattedItems;
-  readonly loading = this.#store.loading;
+  readonly pageLoading = this.#store.pageLoading;
 
   readonly equipmentInputs: { control: string; label: string }[] = [
     { control: 'hat', label: 'Select a hat' },
@@ -73,12 +73,6 @@ export class AppComponent implements OnInit {
 
   filteredOptions: Observable<any[]> = of([]);
 
-  constructor() {
-    effect(() => {
-      console.log(this.formattedItems());
-    });
-  }
-
   ngOnInit(): void {
     this.#store.fetchData();
   }
@@ -98,10 +92,7 @@ export class AppComponent implements OnInit {
 
   onSubmit(): void {
     const formValue = this.equipmentForm.value;
-    const requiredResources: {
-      resourceId: number;
-      quantity: number;
-    }[] = [];
+    const requiredResources: FormattedResource[] = [];
 
     for (const key in formValue) {
       let value: any = formValue[key as keyof typeof formValue];
@@ -132,7 +123,7 @@ export class AppComponent implements OnInit {
       }
     }
 
-    console.log(requiredResources);
+    this.#store.fetchResources(requiredResources);
   }
 
   private filter(value: string | any, itemType: string): any[] {
@@ -153,6 +144,7 @@ export class AppComponent implements OnInit {
       return [];
     }
   }
+
   private inputValidator(): ValidatorFn {
     return (control: AbstractControl): ValidationErrors | null => {
       let value = control.value;

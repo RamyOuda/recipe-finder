@@ -1,7 +1,12 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { map, Observable } from 'rxjs';
-import { FormattedItems } from '../models/app.model';
+import { forkJoin, map, Observable } from 'rxjs';
+import {
+  FormattedItems,
+  FormattedResource,
+  FormattedResourceResponse,
+  ResourceResponse,
+} from '../models/app.model';
 
 @Injectable({ providedIn: 'root' })
 export class AppService {
@@ -20,7 +25,7 @@ export class AppService {
     ];
 
     return this.#http
-      .get<{ items: any[] }>(this.baseUrl + '/items/equipment/all')
+      .get<{ items: any[] }>(`${this.baseUrl}/items/equipment/all`)
       .pipe(
         map(({ items }) => {
           return items
@@ -50,5 +55,25 @@ export class AppService {
             );
         })
       );
+  }
+
+  fetchResources(
+    resources: FormattedResource[]
+  ): Observable<FormattedResourceResponse[]> {
+    return forkJoin(
+      resources.map((resource: FormattedResource) =>
+        this.#http
+          .get<ResourceResponse>(
+            `${this.baseUrl}/items/resources/${resource.resourceId}`
+          )
+          .pipe(
+            map((response: ResourceResponse) => ({
+              name: response.name,
+              imageUrl: response.image_urls.icon,
+              quantity: resource.quantity,
+            }))
+          )
+      )
+    );
   }
 }
