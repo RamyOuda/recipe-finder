@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { forkJoin, map, Observable } from 'rxjs';
 import {
+  FormattedItem,
   FormattedItems,
   FormattedResource,
   FormattedResourceResponse,
@@ -32,12 +33,26 @@ export class AppService {
             .filter((item: any) => item.recipe)
             .reduce(
               (acc: FormattedItems, curr: any) => {
-                const category: keyof typeof acc = curr.type.name.toLowerCase();
+                const recipe: FormattedResource[] = curr.recipe.map(
+                  (rec: any) => ({
+                    id: rec.item_ankama_id,
+                    quantity: rec.quantity,
+                  })
+                );
 
-                if (curr.is_weapon) {
-                  acc.weapon.push(curr);
+                const formattedItem: FormattedItem = {
+                  isWeapon: curr.is_weapon,
+                  name: curr.name,
+                  recipe,
+                  type: curr.type.name,
+                };
+
+                const category = formattedItem.type.toLowerCase();
+
+                if (formattedItem.isWeapon) {
+                  acc.weapon.push(formattedItem);
                 } else if (validCategories.includes(category)) {
-                  acc[category].push(curr);
+                  acc[category as keyof typeof acc].push(formattedItem);
                 }
 
                 return acc;
@@ -61,16 +76,14 @@ export class AppService {
     resources: FormattedResource[]
   ): Observable<FormattedResourceResponse[]> {
     return forkJoin(
-      resources.map((resource: FormattedResource) =>
+      resources.map(({ id, quantity }) =>
         this.#http
-          .get<ResourceResponse>(
-            `${this.baseUrl}/items/resources/${resource.resourceId}`
-          )
+          .get<ResourceResponse>(`${this.baseUrl}/items/resources/${id}`)
           .pipe(
             map((response: ResourceResponse) => ({
               name: response.name,
               imageUrl: response.image_urls.icon,
-              quantity: resource.quantity,
+              quantity,
             }))
           )
       )

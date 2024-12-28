@@ -1,16 +1,23 @@
 export interface FormattedItems {
-  hat: any[];
-  cloak: any[];
-  belt: any[];
-  boots: any[];
-  amulet: any[];
-  ring: any[];
-  shield: any[];
-  weapon: any[];
+  hat: FormattedItem[];
+  cloak: FormattedItem[];
+  belt: FormattedItem[];
+  boots: FormattedItem[];
+  amulet: FormattedItem[];
+  ring: FormattedItem[];
+  shield: FormattedItem[];
+  weapon: FormattedItem[];
+}
+
+export interface FormattedItem {
+  isWeapon: boolean;
+  name: string;
+  recipe: FormattedResource[];
+  type: string;
 }
 
 export interface FormattedResource {
-  resourceId: number;
+  id: number;
   quantity: number;
 }
 

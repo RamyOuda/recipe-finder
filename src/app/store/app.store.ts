@@ -45,11 +45,9 @@ export const AppStore = signalStore(
         })
       )
     ),
+
     fetchResources: rxMethod<FormattedResource[]>(
       pipe(
-        tap(() => {
-          console.log('fetchResource Triggered');
-        }),
         switchMap((resources) => {
           return service.fetchResources(resources).pipe(
             tapResponse({

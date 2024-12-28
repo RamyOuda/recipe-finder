@@ -21,7 +21,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { map, Observable, of, startWith } from 'rxjs';
-import { FormattedResource } from './models/app.model';
+import { FormattedItem, FormattedResource } from './models/app.model';
 import { AppStore } from './store/app.store';
 
 @Component({
@@ -71,7 +71,7 @@ export class AppComponent implements OnInit {
     weapon: new FormControl(null, this.inputValidator()),
   });
 
-  filteredOptions: Observable<any[]> = of([]);
+  filteredOptions: Observable<FormattedItem[]> = of([]);
 
   ngOnInit(): void {
     this.#store.fetchData();
@@ -86,7 +86,7 @@ export class AppComponent implements OnInit {
     );
   }
 
-  autocompleteDisplay(item: any): string {
+  autocompleteDisplay(item: FormattedItem | null): string {
     return item?.name ?? '';
   }
 
@@ -102,31 +102,32 @@ export class AppComponent implements OnInit {
       }
 
       if (value && typeof value === 'object') {
-        value.recipe.forEach(
-          (recipe: { item_ankama_id: number; quantity: number }) => {
-            const formattedResource = {
-              resourceId: recipe.item_ankama_id,
-              quantity: recipe.quantity,
+        value.recipe.forEach((resource: FormattedResource) => {
+          const index: number = requiredResources.findIndex(
+            ({ id }) => id === resource.id
+          );
+
+          if (index === -1) {
+            requiredResources.push(resource);
+          } else {
+            const { id, quantity } = requiredResources[index];
+
+            requiredResources[index] = {
+              id,
+              quantity: quantity + resource.quantity,
             };
-
-            const index: number = requiredResources.findIndex(
-              ({ resourceId }) => resourceId === formattedResource.resourceId
-            );
-
-            if (index === -1) {
-              requiredResources.push(formattedResource);
-            } else {
-              requiredResources[index].quantity += formattedResource.quantity;
-            }
           }
-        );
+        });
       }
     }
 
     this.#store.fetchResources(requiredResources);
   }
 
-  private filter(value: string | any, itemType: string): any[] {
+  private filter(
+    value: FormattedItem | string,
+    itemType: string
+  ): FormattedItem[] {
     const items = this.formattedItems();
     const filterValue = (
       typeof value === 'string' ? value : value.name
@@ -137,8 +138,8 @@ export class AppComponent implements OnInit {
     }
 
     if (items) {
-      return items[itemType as keyof typeof items].filter((item: any) =>
-        item.name.toLowerCase().includes(filterValue)
+      return items[itemType as keyof typeof items].filter(
+        (item: FormattedItem) => item.name.toLowerCase().includes(filterValue)
       );
     } else {
       return [];
