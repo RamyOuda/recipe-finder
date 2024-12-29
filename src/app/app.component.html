@@ -1,12 +1,12 @@
 @if (pageLoading()) {
-<div class="spinner-container">
+<div class="page-spinner">
   <mat-spinner></mat-spinner>
 </div>
 } @else {
 <section class="inputs">
   <h2>Select Items</h2>
 
-  <form [formGroup]="equipmentForm" (ngSubmit)="onSubmit()">
+  <form [formGroup]="equipmentForm">
     @for (input of equipmentInputs; track input.control) {
     <mat-form-field>
       <mat-label>{{ input.label }}</mat-label>
@@ -26,14 +26,26 @@
         <mat-option [value]="option">{{ option.name }}</mat-option>
         }
       </mat-autocomplete>
+
+      @if (equipmentForm.get(input.control)?.value) {
+      <button
+        mat-icon-button
+        matSuffix
+        aria-label="Clear"
+        (click)="clearInput(input.control)"
+      >
+        <mat-icon>close</mat-icon>
+      </button>
+      }
     </mat-form-field>
     }
 
     <button
+      class="submit"
       mat-raised-button
       color="primary"
       type="submit"
-      [disabled]="equipmentForm.invalid || !equipmentForm.dirty"
+      (click)="onSubmit()"
     >
       Submit
     </button>
@@ -51,7 +63,24 @@
 
 <section class="recipe">
   <h2>Required Materials</h2>
+
+  @if (resourcesLoading()) {
+  <div class="resource-spinner">
+    <mat-spinner></mat-spinner>
+  </div>
+  } @else {
+  <div class="resource-container">
+    @if (formattedResources().length) { @for (resource of formattedResources();
+    track $index) {
+    <div class="resource">
+      <img class="resource-img" [src]="resource.imageUrl" alt="resource" />
+      <span class="resource-name">{{ resource.name }}</span>
+      <span class="resource-quantity"
+        >x{{ resource.quantity | number : "1.0-0" }}</span
+      >
+    </div>
+    } }
+  </div>
+  }
 </section>
 }
-
-<footer>A site made by Nub-cakez&trade;</footer>

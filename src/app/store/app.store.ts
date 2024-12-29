@@ -4,17 +4,25 @@ import { tapResponse } from '@ngrx/operators';
 import { patchState, signalStore, withMethods, withState } from '@ngrx/signals';
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
 import { EMPTY, pipe, switchMap, tap } from 'rxjs';
-import { FormattedItems, FormattedResource } from '../models/app.model';
+import {
+  FormattedItems,
+  FormattedResource,
+  FormattedResourceResponse,
+} from '../models/app.model';
 import { AppService } from './app.service';
 
 interface AppState {
   pageLoading: boolean;
+  resourcesLoading: boolean;
   formattedItems: FormattedItems | null;
+  formattedResources: FormattedResourceResponse[];
 }
 
 const initialState: AppState = {
   pageLoading: false,
+  resourcesLoading: false,
   formattedItems: null,
+  formattedResources: [],
 };
 
 export const AppStore = signalStore(
@@ -48,14 +56,28 @@ export const AppStore = signalStore(
 
     fetchResources: rxMethod<FormattedResource[]>(
       pipe(
+        tap(() => {
+          patchState(store, { resourcesLoading: true });
+        }),
         switchMap((resources) => {
           return service.fetchResources(resources).pipe(
             tapResponse({
-              next: (response: any) => {
-                console.log('Store fetchResource Response:', response);
+              next: (formattedResources: FormattedResourceResponse[]) => {
+                console.log(
+                  'Store fetchResource Response:',
+                  formattedResources
+                );
+                patchState(store, {
+                  formattedResources,
+                  resourcesLoading: false,
+                });
               },
               error: (err: HttpErrorResponse) => {
                 console.error(err.message);
+                patchState(store, {
+                  formattedResources: [],
+                  resourcesLoading: false,
+                });
                 return EMPTY;
               },
             })

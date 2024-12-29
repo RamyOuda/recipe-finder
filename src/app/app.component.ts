@@ -1,4 +1,4 @@
-import { AsyncPipe } from '@angular/common';
+import { AsyncPipe, DecimalPipe } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -17,6 +17,7 @@ import {
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatTooltipModule } from '@angular/material/tooltip';
@@ -32,10 +33,12 @@ import { AppStore } from './store/app.store';
     MatInputModule,
     MatAutocompleteModule,
     ReactiveFormsModule,
-    AsyncPipe,
     MatButtonModule,
     MatProgressSpinnerModule,
     MatTooltipModule,
+    MatIconModule,
+    AsyncPipe,
+    DecimalPipe,
   ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',
@@ -44,8 +47,11 @@ import { AppStore } from './store/app.store';
 })
 export class AppComponent implements OnInit {
   readonly #store = inject(AppStore);
+
   readonly formattedItems = this.#store.formattedItems;
+  readonly formattedResources = this.#store.formattedResources;
   readonly pageLoading = this.#store.pageLoading;
+  readonly resourcesLoading = this.#store.resourcesLoading;
 
   readonly equipmentInputs: { control: string; label: string }[] = [
     { control: 'hat', label: 'Select a hat' },
@@ -86,6 +92,10 @@ export class AppComponent implements OnInit {
     );
   }
 
+  clearInput(controlName: string): void {
+    this.equipmentForm.get(controlName)?.setValue(null);
+  }
+
   autocompleteDisplay(item: FormattedItem | null): string {
     return item?.name ?? '';
   }
@@ -93,6 +103,7 @@ export class AppComponent implements OnInit {
   onSubmit(): void {
     const formValue = this.equipmentForm.value;
     const requiredResources: FormattedResource[] = [];
+    let isValid = false;
 
     for (const key in formValue) {
       let value: any = formValue[key as keyof typeof formValue];
@@ -102,6 +113,8 @@ export class AppComponent implements OnInit {
       }
 
       if (value && typeof value === 'object') {
+        isValid = true;
+
         value.recipe.forEach((resource: FormattedResource) => {
           const index: number = requiredResources.findIndex(
             ({ id }) => id === resource.id
@@ -121,7 +134,9 @@ export class AppComponent implements OnInit {
       }
     }
 
-    this.#store.fetchResources(requiredResources);
+    if (isValid) {
+      this.#store.fetchResources(requiredResources);
+    }
   }
 
   private filter(
