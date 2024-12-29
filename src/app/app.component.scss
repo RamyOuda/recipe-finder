@@ -1,17 +1,37 @@
 :host {
   .spinner-container {
-    height: 100vh;
-    width: 100vw;
-
     display: flex;
     justify-content: center;
     align-items: center;
+
+    height: 100vh;
+    width: 100vw;
   }
 
   footer {
+    position: fixed;
+    bottom: 8px;
+
+    display: flex;
+    justify-content: space-between;
+    align-items: end;
+
+    box-sizing: border-box;
+    width: 100%;
+    padding: 0 8px;
     color: cyan;
-    position: absolute;
-    bottom: 4px;
-    left: 4px;
+
+    a {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+
+      text-decoration: none;
+      color: cyan;
+
+      .github-icon {
+        font-size: 32px;
+      }
+    }
   }
 }
