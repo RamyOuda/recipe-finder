@@ -4,13 +4,13 @@ import {
   inject,
   OnInit,
 } from '@angular/core';
-import { GearRecipePageComponent } from './gear-recipe-page/gear-recipe-page.component';
-import { AppStore } from './store/app.store';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { RouterOutlet } from '@angular/router';
+import { AppStore } from './store/app.store';
 
 @Component({
   selector: 'app-root',
-  imports: [GearRecipePageComponent, MatProgressSpinnerModule],
+  imports: [RouterOutlet, MatProgressSpinnerModule],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',
   standalone: true,
