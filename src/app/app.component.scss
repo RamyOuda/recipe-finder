@@ -1,94 +1,10 @@
 :host {
-  display: flex;
-  gap: 16px;
-  padding: 32px;
-
-  .page-spinner {
+  .spinner-container {
     height: 100vh;
     width: 100vw;
+
     display: flex;
     justify-content: center;
     align-items: center;
-  }
-
-  .inputs {
-    flex: 1;
-
-    h2 {
-      text-align: center;
-      padding-bottom: 16px;
-    }
-
-    form {
-      display: flex;
-      flex-wrap: wrap;
-
-      mat-form-field {
-        flex: 1 0 50%;
-        box-sizing: border-box;
-        padding: 16px;
-      }
-
-      .submit {
-        flex: 1 0 50%;
-        box-sizing: border-box;
-        margin-top: 16px;
-        height: 56px;
-      }
-    }
-
-    .img-container {
-      margin-top: 48px;
-      text-align: center;
-    }
-  }
-
-  .recipe {
-    flex: 1;
-
-    h2 {
-      text-align: center;
-      padding-bottom: 16px;
-    }
-
-    .resource-spinner {
-      height: 75%;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
-
-    .resource-container {
-      max-height: 700px;
-      overflow-y: auto;
-
-      .resource {
-        display: flex;
-        gap: 16px;
-        font-size: 20px;
-
-        &-img {
-          height: 24px;
-        }
-
-        &-name {
-          flex: 1;
-        }
-
-        &-quantity {
-          flex: 1;
-        }
-      }
-    }
-  }
-}
-
-@media (max-width: 1000px) {
-  :host {
-    padding: 8px;
-
-    .recipe {
-      display: none;
-    }
   }
 }

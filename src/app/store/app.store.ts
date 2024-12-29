@@ -63,10 +63,6 @@ export const AppStore = signalStore(
           return service.fetchResources(resources).pipe(
             tapResponse({
               next: (formattedResources: FormattedResourceResponse[]) => {
-                console.log(
-                  'Store fetchResource Response:',
-                  formattedResources
-                );
                 patchState(store, {
                   formattedResources,
                   resourcesLoading: false,
