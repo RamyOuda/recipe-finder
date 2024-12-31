@@ -20,6 +20,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { map, Observable, of, startWith } from 'rxjs';
 import { FormattedItem, FormattedResource } from '../models/app.model';
 import { AppStore } from '../store/app.store';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'gear-recipe-page',
@@ -44,6 +45,7 @@ import { AppStore } from '../store/app.store';
 export class GearRecipePageComponent {
   readonly #store = inject(AppStore);
   readonly #clipboard = inject(Clipboard);
+  readonly #snackBar = inject(MatSnackBar);
 
   readonly formattedItems = this.#store.formattedItems;
   readonly formattedResources = this.#store.formattedResources;
@@ -137,6 +139,10 @@ export class GearRecipePageComponent {
       .join('\n');
 
     this.#clipboard.copy(formattedText);
+
+    this.#snackBar.open('Resources copied to clipboard!', 'Hurray!', {
+      duration: 2000,
+    });
   }
 
   private filter(
