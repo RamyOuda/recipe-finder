@@ -1,10 +1,6 @@
+import { Clipboard } from '@angular/cdk/clipboard';
 import { AsyncPipe, DecimalPipe } from '@angular/common';
-import {
-  ChangeDetectionStrategy,
-  Component,
-  inject,
-  OnInit,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import {
   AbstractControl,
   FormControl,
@@ -47,6 +43,8 @@ import { AppStore } from '../store/app.store';
 })
 export class GearRecipePageComponent {
   readonly #store = inject(AppStore);
+  readonly #clipboard = inject(Clipboard);
+
   readonly formattedItems = this.#store.formattedItems;
   readonly formattedResources = this.#store.formattedResources;
   readonly resourcesLoading = this.#store.resourcesLoading;
@@ -131,6 +129,14 @@ export class GearRecipePageComponent {
     if (isValid) {
       this.#store.fetchResources(requiredResources);
     }
+  }
+
+  copyResources(): void {
+    const formattedText: string = this.formattedResources()
+      .map(({ name, quantity }) => `${name}: x${quantity}`)
+      .join('\n');
+
+    this.#clipboard.copy(formattedText);
   }
 
   private filter(

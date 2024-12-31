@@ -51,7 +51,7 @@
       <p>
         Search and select items in the dropdown menus above. Once the form is
         submitted, all of the resources required to craft those items will
-        display under the "Required Materials" label.
+        display with a button to copy to clipboard.
       </p>
     </div>
 
@@ -67,15 +67,20 @@
 </section>
 
 <section class="recipe">
-  <h2>Required Materials</h2>
-
   @if (resourcesLoading()) {
     <div class="resource-spinner">
       <mat-spinner></mat-spinner>
     </div>
   } @else {
-    <div class="resource-container">
-      @if (formattedResources().length) {
+    @if (formattedResources().length) {
+      <h2>Required Materials</h2>
+
+      <button mat-raised-button color="primary" (click)="copyResources()">
+        Copy Resources
+        <i class="fa-solid fa-copy"></i>
+      </button>
+
+      <div class="resource-container">
         @for (resource of formattedResources(); track $index) {
           <div class="resource">
             <img
@@ -89,7 +94,7 @@
             >
           </div>
         }
-      }
-    </div>
+      </div>
+    }
   }
 </section>

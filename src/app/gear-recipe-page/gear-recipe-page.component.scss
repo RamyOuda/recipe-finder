@@ -48,8 +48,12 @@
   .recipe {
     flex: 1;
 
+    button {
+      margin-bottom: 32px;
+      min-width: 320px;
+    }
+
     h2 {
-      text-align: center;
       padding-bottom: 16px;
     }
 
