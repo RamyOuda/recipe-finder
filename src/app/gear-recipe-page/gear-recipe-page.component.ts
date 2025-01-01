@@ -3,7 +3,6 @@ import { AsyncPipe, DecimalPipe } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
-  effect,
   inject,
   signal,
 } from '@angular/core';
@@ -101,10 +100,6 @@ export class GearRecipePageComponent {
   constructor() {
     this.resize$.pipe(takeUntilDestroyed()).subscribe((event: ResizeEvent) => {
       this.isMobileView.set(event.target.innerWidth <= 1000);
-    });
-
-    effect(() => {
-      console.log(this.formattedResources());
     });
   }
 
