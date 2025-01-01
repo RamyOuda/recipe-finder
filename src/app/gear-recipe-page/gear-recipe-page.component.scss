@@ -112,8 +112,16 @@
   :host {
     padding: 16px;
 
-    .inputs form mat-form-field {
-      padding: 8px;
+    .inputs {
+      form {
+        mat-form-field {
+          padding: 8px;
+        }
+      }
+
+      .stuff-container {
+        flex-direction: column;
+      }
     }
   }
 }
