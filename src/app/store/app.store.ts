@@ -16,6 +16,7 @@ interface AppState {
   resourcesLoading: boolean;
   formattedItems: FormattedItems | null;
   formattedResources: FormattedResourceResponse[];
+  networkError: boolean;
 }
 
 const initialState: AppState = {
@@ -23,6 +24,7 @@ const initialState: AppState = {
   resourcesLoading: false,
   formattedItems: null,
   formattedResources: [],
+  networkError: false,
 };
 
 export const AppStore = signalStore(
@@ -37,21 +39,24 @@ export const AppStore = signalStore(
         switchMap(() => {
           return service.fetchData().pipe(
             tapResponse({
-              next: (response: FormattedItems) => {
+              next: (formattedItems: FormattedItems) => {
                 patchState(store, {
-                  formattedItems: response,
+                  formattedItems,
                   pageLoading: false,
                 });
               },
               error: (err: HttpErrorResponse) => {
                 console.error(err.message);
-                patchState(store, initialState);
+                patchState(store, {
+                  pageLoading: false,
+                  networkError: true,
+                });
                 return EMPTY;
               },
-            })
+            }),
           );
-        })
-      )
+        }),
+      ),
     ),
 
     fetchResources: rxMethod<FormattedResource[]>(
@@ -71,15 +76,16 @@ export const AppStore = signalStore(
               error: (err: HttpErrorResponse) => {
                 console.error(err.message);
                 patchState(store, {
-                  formattedResources: [],
                   resourcesLoading: false,
+                  formattedResources: [],
+                  networkError: true,
                 });
                 return EMPTY;
               },
-            })
+            }),
           );
-        })
-      )
+        }),
+      ),
     ),
-  }))
+  })),
 );

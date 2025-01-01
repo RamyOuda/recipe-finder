@@ -1,116 +1,126 @@
-@let isMobile = isMobileDevice();
+@let isMobile = isMobileView();
 @let formSubmitted = isFormSubmitted();
+@let networkErr = networkError();
 
-@if (!isMobile || !formSubmitted) {
-  <section class="inputs">
-    <h2>Select Items</h2>
+@if (networkErr) {
+  <section class="network-error">
+    <h2>Uh oh!</h2>
+    <p>Seems your luck's run out.</p>
+    <p>Try refreshing the page, or trying again later.</p>
+    <img src="facepalm.png" alt="Facepalm" />
+  </section>
+} @else {
+  @if (!isMobile || !formSubmitted) {
+    <section class="inputs">
+      <h2>Select Items</h2>
 
-    <form [formGroup]="equipmentForm">
-      @for (input of equipmentInputs; track input.control) {
-        <mat-form-field>
-          <mat-label>{{ input.label }}</mat-label>
-          <input
-            type="text"
-            [attr.aria-label]="input.label"
-            matInput
-            [formControlName]="input.control"
-            [matAutocomplete]="auto"
-            (focus)="onInputSelected(input.control)"
-          />
-          <mat-autocomplete
-            #auto="matAutocomplete"
-            [displayWith]="autocompleteDisplay"
-          >
-            @for (option of filteredOptions$ | async; track $index) {
-              <mat-option [value]="option">{{ option.name }}</mat-option>
-            }
-          </mat-autocomplete>
-
-          @if (equipmentForm.get(input.control)?.value) {
-            <button
-              mat-icon-button
-              matSuffix
-              aria-label="Clear"
-              (click)="clearInput(input.control)"
+      <form [formGroup]="equipmentForm">
+        @for (input of equipmentInputs; track input.control) {
+          <mat-form-field>
+            <mat-label>{{ input.label }}</mat-label>
+            <input
+              type="text"
+              [attr.aria-label]="input.label"
+              matInput
+              [formControlName]="input.control"
+              [matAutocomplete]="auto"
+              (focus)="onInputSelected(input.control)"
+            />
+            <mat-autocomplete
+              #auto="matAutocomplete"
+              [displayWith]="autocompleteDisplay"
             >
-              <mat-icon>close</mat-icon>
-            </button>
-          }
-        </mat-form-field>
-      }
+              @for (option of filteredOptions$ | async; track $index) {
+                <mat-option [value]="option">{{ option.name }}</mat-option>
+              }
+            </mat-autocomplete>
 
-      <button
-        class="submit"
-        mat-raised-button
-        color="primary"
-        type="submit"
-        (click)="onSubmit()"
-      >
-        Submit
-      </button>
-    </form>
-
-    <div class="stuff-container">
-      <div class="info-container">
-        <p>
-          Search and select items in the dropdown menus above. Once the form is
-          submitted, all of the resources required to craft those items will
-          display with a button to copy to clipboard.
-        </p>
-      </div>
-
-      <div class="image-container">
-        <img
-          src="OverTheMoon.png"
-          alt="Guild Emblem"
-          matTooltip="Over the Moon"
-          matTooltipPosition="above"
-        />
-      </div>
-    </div>
-  </section>
-}
-
-@if (!isMobile || formSubmitted) {
-  <section class="recipe">
-    @if (resourcesLoading()) {
-      <div class="resource-spinner">
-        <mat-spinner></mat-spinner>
-      </div>
-    } @else {
-      @if (formattedResources().length) {
-        <h2>Required Materials</h2>
-
-        <div class="recipe-actions">
-          @if (isMobile) {
-            <button mat-raised-button color="primary" (click)="backToForm()">
-              Back to item selection
-              <i class="fa-solid fa-rotate-left"></i>
-            </button>
-          }
-
-          <button mat-raised-button color="primary" (click)="copyResources()">
-            Copy Resources
-            <i class="fa-solid fa-copy"></i>
-          </button>
-        </div>
-
-        <div class="resource-container">
-          @for (resource of formattedResources(); track $index) {
-            <div class="resource">
-              <img
-                class="resource-img"
-                [src]="resource.imageUrl"
-                alt="resource"
-              />
-              <span class="resource-name">{{ resource.name }}</span>
-              <span class="resource-quantity"
-                >x{{ resource.quantity | number: "1.0-0" }}</span
+            @if (equipmentForm.get(input.control)?.value) {
+              <button
+                mat-icon-button
+                matSuffix
+                aria-label="Clear"
+                (click)="clearInput(input.control)"
               >
-            </div>
-          }
+                <mat-icon>close</mat-icon>
+              </button>
+            }
+          </mat-form-field>
+        }
+
+        <button
+          class="submit"
+          mat-raised-button
+          color="primary"
+          type="submit"
+          (click)="onSubmit()"
+        >
+          Submit
+        </button>
+      </form>
+
+      <div class="stuff-container">
+        <div class="info-container">
+          <p>
+            Search and select items in the dropdown menus above. Once the form
+            is submitted, all of the resources required to craft those items
+            will display with a button to copy to clipboard.
+          </p>
         </div>
+
+        <div class="image-container">
+          <img
+            src="OverTheMoon.png"
+            alt="Guild Emblem"
+            matTooltip="Over the Moon"
+            matTooltipPosition="above"
+          />
+        </div>
+      </div>
+    </section>
+  }
+
+  @if (!isMobile || formSubmitted) {
+    <section class="recipe">
+      @if (resourcesLoading()) {
+        <div class="resource-spinner">
+          <mat-spinner></mat-spinner>
+        </div>
+      } @else {
+        @if (formattedResources().length) {
+          <h2>Required Materials</h2>
+
+          <div class="recipe-actions">
+            @if (isMobile) {
+              <button mat-raised-button color="primary" (click)="backToForm()">
+                Back to item selection
+                <i class="fa-solid fa-rotate-left"></i>
+              </button>
+            }
+
+            <button mat-raised-button color="primary" (click)="copyResources()">
+              Copy Resources
+              <i class="fa-solid fa-copy"></i>
+            </button>
+          </div>
+
+          <div class="resource-container">
+            @for (resource of formattedResources(); track $index) {
+              <div class="resource">
+                <img
+                  class="resource-img"
+                  [src]="resource.imageUrl"
+                  alt="resource"
+                />
+                <span class="resource-name">{{ resource.name }}</span>
+                <span class="resource-quantity"
+                  >x{{ resource.quantity | number: "1.0-0" }}</span
+                >
+              </div>
+            }
+          </div>
+        }
       }
-    }
-  </section>
+    </section>
+  }
 }

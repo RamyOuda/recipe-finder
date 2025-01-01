@@ -62,8 +62,9 @@ export class GearRecipePageComponent {
   readonly formattedItems = this.#store.formattedItems;
   readonly formattedResources = this.#store.formattedResources;
   readonly resourcesLoading = this.#store.resourcesLoading;
+  readonly networkError = this.#store.networkError;
 
-  readonly isMobileDevice = signal<boolean>(window.innerWidth <= 1000);
+  readonly isMobileView = signal<boolean>(window.innerWidth <= 1000);
   readonly isFormSubmitted = signal<boolean>(false);
 
   readonly resize$: Observable<ResizeEvent> = fromEvent<ResizeEvent>(
@@ -98,7 +99,7 @@ export class GearRecipePageComponent {
 
   constructor() {
     this.resize$.pipe(takeUntilDestroyed()).subscribe((event: ResizeEvent) => {
-      this.isMobileDevice.set(event.target.innerWidth <= 1000);
+      this.isMobileView.set(event.target.innerWidth <= 1000);
     });
   }
 

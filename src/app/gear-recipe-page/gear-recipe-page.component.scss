@@ -52,7 +52,7 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      height: 75%;
+      height: 100vh;
     }
 
     h2 {
@@ -97,6 +97,16 @@
           flex: 1;
         }
       }
+    }
+  }
+}
+
+@media (width <= 1000px) {
+  :host {
+    padding: 16px;
+
+    .inputs form mat-form-field {
+      padding: 8px;
     }
   }
 }
