@@ -87,6 +87,7 @@ export class AppService {
               name: response.name,
               imageUrl: response.image_urls.icon,
               quantity,
+              subtype,
             })),
           );
       }),

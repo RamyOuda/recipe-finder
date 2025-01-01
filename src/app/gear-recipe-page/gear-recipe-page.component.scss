@@ -85,8 +85,15 @@
         font-size: 20px;
         border-bottom: 1px dotted gray;
 
-        &-img {
-          height: 32px;
+        .img-container {
+          display: flex;
+          align-items: center;
+          justify-content: end;
+          width: 60px;
+
+          .resource-img {
+            height: 32px;
+          }
         }
 
         &-name {

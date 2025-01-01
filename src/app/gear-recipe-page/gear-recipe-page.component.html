@@ -107,11 +107,21 @@
           <div class="resource-container">
             @for (resource of formattedResources(); track $index) {
               <div class="resource">
-                <img
-                  class="resource-img"
-                  [src]="resource.imageUrl"
-                  alt="resource"
-                />
+                <div class="img-container">
+                  @if (resource.subtype === "equipment") {
+                    <i
+                      class="fa-solid fa-circle-exclamation"
+                      matTooltip="This is an equipment item"
+                      matTooltipPosition="above"
+                    ></i>
+                  }
+
+                  <img
+                    class="resource-img"
+                    [src]="resource.imageUrl"
+                    alt="resource"
+                  />
+                </div>
                 <span class="resource-name">{{ resource.name }}</span>
                 <span class="resource-quantity"
                   >x{{ resource.quantity | number: "1.0-0" }}</span

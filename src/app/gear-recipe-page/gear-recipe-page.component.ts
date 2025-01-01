@@ -3,6 +3,7 @@ import { AsyncPipe, DecimalPipe } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
+  effect,
   inject,
   signal,
 } from '@angular/core';
@@ -101,6 +102,10 @@ export class GearRecipePageComponent {
     this.resize$.pipe(takeUntilDestroyed()).subscribe((event: ResizeEvent) => {
       this.isMobileView.set(event.target.innerWidth <= 1000);
     });
+
+    effect(() => {
+      console.log(this.formattedResources());
+    });
   }
 
   onInputSelected(itemType: string): void {
@@ -166,7 +171,9 @@ export class GearRecipePageComponent {
 
   copyResources(): void {
     const formattedText: string = this.formattedResources()
-      .map(({ name, quantity }) => `${name}: x${quantity}`)
+      .map(({ name, quantity, subtype }) => {
+        return `${subtype === 'equipment' ? '[! Equipment] - ' : ''}${name}: x${quantity}`;
+      })
       .join('\n');
 
     this.#clipboard.copy(formattedText);

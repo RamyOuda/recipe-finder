@@ -48,4 +48,5 @@ export interface FormattedResourceResponse {
   name: string;
   imageUrl: string;
   quantity: number;
+  subtype: string;
 }
