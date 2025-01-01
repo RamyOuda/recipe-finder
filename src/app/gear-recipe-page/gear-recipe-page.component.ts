@@ -1,6 +1,12 @@
 import { Clipboard } from '@angular/cdk/clipboard';
 import { AsyncPipe, DecimalPipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  inject,
+  signal,
+} from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
   AbstractControl,
   FormControl,
@@ -16,11 +22,17 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { map, Observable, of, startWith } from 'rxjs';
+import { fromEvent, map, Observable, of, startWith } from 'rxjs';
 import { FormattedItem, FormattedResource } from '../models/app.model';
 import { AppStore } from '../store/app.store';
-import { MatSnackBar } from '@angular/material/snack-bar';
+
+interface ResizeEvent {
+  target: {
+    innerWidth: number;
+  };
+}
 
 @Component({
   selector: 'gear-recipe-page',
@@ -51,6 +63,15 @@ export class GearRecipePageComponent {
   readonly formattedResources = this.#store.formattedResources;
   readonly resourcesLoading = this.#store.resourcesLoading;
 
+  readonly isMobileDevice = signal<boolean>(window.innerWidth <= 1000);
+  readonly isFormSubmitted = signal<boolean>(false);
+
+  readonly resize$: Observable<ResizeEvent> = fromEvent<ResizeEvent>(
+    window,
+    'resize',
+  );
+  filteredOptions$: Observable<FormattedItem[]> = of([]);
+
   readonly equipmentInputs: { control: string; label: string }[] = [
     { control: 'hat', label: 'Select a hat' },
     { control: 'cloak', label: 'Select a cloak' },
@@ -75,12 +96,16 @@ export class GearRecipePageComponent {
     weapon: new FormControl(null, this.inputValidator()),
   });
 
-  filteredOptions: Observable<FormattedItem[]> = of([]);
+  constructor() {
+    this.resize$.pipe(takeUntilDestroyed()).subscribe((event: ResizeEvent) => {
+      this.isMobileDevice.set(event.target.innerWidth <= 1000);
+    });
+  }
 
   onInputSelected(itemType: string): void {
     const formControl = this.equipmentForm.get(itemType) as FormControl;
 
-    this.filteredOptions = formControl.valueChanges.pipe(
+    this.filteredOptions$ = formControl.valueChanges.pipe(
       startWith(''),
       map((value) => this.filter(value ?? '', itemType)),
     );
@@ -130,7 +155,12 @@ export class GearRecipePageComponent {
 
     if (isValid) {
       this.#store.fetchResources(requiredResources);
+      this.isFormSubmitted.set(true);
     }
+  }
+
+  backToForm(): void {
+    this.isFormSubmitted.set(false);
   }
 
   copyResources(): void {
@@ -169,17 +199,11 @@ export class GearRecipePageComponent {
 
   private inputValidator(): ValidatorFn {
     return (control: AbstractControl): ValidationErrors | null => {
-      let value = control.value;
+      const value = control.value;
+      const error = { notObject: { value: control.value } };
+      const isValid = typeof value === 'object' || value === '';
 
-      if (value === '') {
-        value = null;
-      }
-
-      if (typeof value === 'object') {
-        return null;
-      } else {
-        return { notObject: { value: control.value } };
-      }
+      return isValid ? null : error;
     };
   }
 }

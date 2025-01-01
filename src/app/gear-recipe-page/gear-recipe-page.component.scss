@@ -48,20 +48,26 @@
   .recipe {
     flex: 1;
 
-    button {
-      margin-bottom: 32px;
-      min-width: 320px;
+    .resource-spinner {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 75%;
     }
 
     h2 {
       padding-bottom: 16px;
     }
 
-    .resource-spinner {
+    .recipe-actions {
       display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 75%;
+      flex-direction: column;
+      gap: 16px;
+      margin-bottom: 16px;
+
+      button {
+        max-width: 320px;
+      }
     }
 
     .resource-container {
@@ -74,31 +80,23 @@
 
       .resource {
         display: flex;
+        align-items: center;
         gap: 16px;
         font-size: 20px;
+        border-bottom: 1px dotted gray;
 
         &-img {
           height: 32px;
         }
 
         &-name {
-          flex: 1;
+          flex: 2;
         }
 
         &-quantity {
           flex: 1;
         }
       }
-    }
-  }
-}
-
-@media (max-width: 1000px) {
-  :host {
-    padding: 8px;
-
-    .recipe {
-      display: none;
     }
   }
 }
