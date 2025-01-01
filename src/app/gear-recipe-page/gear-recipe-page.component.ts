@@ -143,11 +143,11 @@ export class GearRecipePageComponent {
           if (index === -1) {
             requiredResources.push(resource);
           } else {
-            const { id, quantity } = requiredResources[index];
+            const currentResource: FormattedResource = requiredResources[index];
 
             requiredResources[index] = {
-              id,
-              quantity: quantity + resource.quantity,
+              ...currentResource,
+              quantity: currentResource.quantity + resource.quantity,
             };
           }
         });

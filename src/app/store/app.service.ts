@@ -6,6 +6,8 @@ import {
   FormattedItems,
   FormattedResource,
   FormattedResourceResponse,
+  ItemResponse,
+  RecipeResponse,
   ResourceResponse,
 } from '../models/app.model';
 
@@ -26,18 +28,19 @@ export class AppService {
     ];
 
     return this.#http
-      .get<{ items: any[] }>(`${this.baseUrl}/items/equipment/all`)
+      .get<{ items: ItemResponse[] }>(`${this.baseUrl}/items/equipment/all`)
       .pipe(
         map(({ items }) => {
           return items
-            .filter((item: any) => item.recipe)
+            .filter((item: ItemResponse) => item.recipe)
             .reduce(
-              (acc: FormattedItems, curr: any) => {
+              (acc: FormattedItems, curr: ItemResponse) => {
                 const recipe: FormattedResource[] = curr.recipe.map(
-                  (rec: any) => ({
+                  (rec: RecipeResponse) => ({
                     id: rec.item_ankama_id,
+                    subtype: rec.item_subtype,
                     quantity: rec.quantity,
-                  })
+                  }),
                 );
 
                 const formattedItem: FormattedItem = {
@@ -66,27 +69,27 @@ export class AppService {
                 ring: [],
                 shield: [],
                 weapon: [],
-              }
+              },
             );
-        })
+        }),
       );
   }
 
   fetchResources(
-    resources: FormattedResource[]
+    resources: FormattedResource[],
   ): Observable<FormattedResourceResponse[]> {
     return forkJoin(
-      resources.map(({ id, quantity }) =>
-        this.#http
-          .get<ResourceResponse>(`${this.baseUrl}/items/resources/${id}`)
+      resources.map(({ id, subtype, quantity }) => {
+        return this.#http
+          .get<ResourceResponse>(`${this.baseUrl}/items/${subtype}/${id}`)
           .pipe(
             map((response: ResourceResponse) => ({
               name: response.name,
               imageUrl: response.image_urls.icon,
               quantity,
-            }))
-          )
-      )
+            })),
+          );
+      }),
     );
   }
 }

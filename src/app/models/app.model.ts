@@ -16,8 +16,24 @@ export interface FormattedItem {
   type: string;
 }
 
+export interface ItemResponse {
+  is_weapon: boolean;
+  name: string;
+  recipe: RecipeResponse[];
+  type: {
+    name: string;
+  };
+}
+
+export interface RecipeResponse {
+  item_ankama_id: number;
+  item_subtype: string;
+  quantity: number;
+}
+
 export interface FormattedResource {
   id: number;
+  subtype: string;
   quantity: number;
 }
 
