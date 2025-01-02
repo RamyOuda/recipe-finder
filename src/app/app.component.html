@@ -5,7 +5,7 @@
   <mat-toolbar>
     <section class="menu-title-nav">
       @if (mobileView) {
-        <button mat-icon-button aria-label="Menu" (click)="expandMenu()">
+        <button mat-icon-button aria-label="Menu" (click)="drawer.toggle()">
           <i class="fa-solid fa-bars"></i>
         </button>
       }
@@ -14,7 +14,7 @@
       <img src="cawwot.png" alt="Cawwot" />
 
       @if (!mobileView) {
-        <div class="nav-links">
+        <div class="nav-links-desktop">
           <a
             mat-button
             routerLink="/gear"
@@ -65,10 +65,52 @@
   </mat-toolbar>
 </header>
 
-@if (loading) {
-  <div class="spinner-container">
-    <mat-spinner></mat-spinner>
-  </div>
-} @else {
-  <router-outlet></router-outlet>
-}
+<mat-drawer-container>
+  <mat-drawer #drawer mode="over">
+    <div class="nav-links-mobile">
+      <a
+        mat-button
+        routerLink="/gear"
+        routerLinkActive="active"
+        aria-label="Gear"
+        (click)="drawer.toggle()"
+        ><i class="fa-solid fa-shirt"></i> Gear</a
+      >
+      <a
+        mat-button
+        routerLink="/trophies"
+        routerLinkActive="active"
+        aria-label="Trophies"
+        (click)="drawer.toggle()"
+        disabled="true"
+        ><i class="fa-solid fa-trophy"></i> Trophies</a
+      >
+      <a
+        mat-button
+        routerLink="/sets"
+        routerLinkActive="active"
+        aria-label="Sets"
+        (click)="drawer.toggle()"
+        disabled="true"
+        ><i class="fa-solid fa-shield-halved"></i> Sets</a
+      >
+      <a
+        mat-button
+        routerLink="/consumables"
+        routerLinkActive="active"
+        aria-label="Consumables"
+        (click)="drawer.toggle()"
+        disabled="true"
+        ><i class="fa-solid fa-flask"></i> Consumables</a
+      >
+    </div>
+  </mat-drawer>
+
+  @if (loading) {
+    <div class="spinner-container">
+      <mat-spinner></mat-spinner>
+    </div>
+  } @else {
+    <router-outlet></router-outlet>
+  }
+</mat-drawer-container>

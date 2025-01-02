@@ -1,3 +1,4 @@
+import { CommonModule } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -7,8 +8,9 @@ import {
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatButtonModule } from '@angular/material/button';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatToolbarModule } from '@angular/material/toolbar';
-import { RouterModule, RouterOutlet } from '@angular/router';
+import { RouterModule } from '@angular/router';
 import { fromEvent, Observable } from 'rxjs';
 import { AppStore } from './store/app.store';
 
@@ -21,10 +23,12 @@ interface ResizeEvent {
 @Component({
   selector: 'app-root',
   imports: [
+    CommonModule,
     RouterModule,
     MatProgressSpinnerModule,
     MatToolbarModule,
     MatButtonModule,
+    MatSidenavModule,
   ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',
@@ -49,9 +53,5 @@ export class AppComponent implements OnInit {
 
   ngOnInit(): void {
     this.#store.fetchData();
-  }
-
-  expandMenu(): void {
-    console.log('Menu button clicked');
   }
 }

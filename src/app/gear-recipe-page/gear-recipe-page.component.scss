@@ -120,6 +120,8 @@
 
 @media (width <= 1000px) {
   :host {
+    padding-bottom: 0;
+
     .inputs {
       form {
         mat-form-field {
