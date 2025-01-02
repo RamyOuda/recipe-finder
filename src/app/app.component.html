@@ -1,51 +1,58 @@
 @let loading = pageLoading();
+@let mobileView = isMobileView();
 
 <header>
   <mat-toolbar>
     <section class="menu-title-nav">
-      <button mat-icon-button aria-label="Menu" (click)="expandMenu()">
-        <i class="fa-solid fa-bars"></i>
-      </button>
+      @if (mobileView) {
+        <button mat-icon-button aria-label="Menu" (click)="expandMenu()">
+          <i class="fa-solid fa-bars"></i>
+        </button>
+      }
+
       <span>Recipe Finder</span>
       <img src="cawwot.png" alt="Cawwot" />
-      <div class="nav-links">
-        <a
-          mat-button
-          routerLink="/gear"
-          routerLinkActive="active"
-          aria-label="Gear"
-          >Gear</a
-        >
-        <a
-          mat-button
-          routerLink="/trophies"
-          routerLinkActive="active"
-          aria-label="Trophies"
-          disabled="true"
-          >Trophies</a
-        >
-        <a
-          mat-button
-          routerLink="/sets"
-          routerLinkActive="active"
-          aria-label="Sets"
-          disabled="true"
-          >Sets</a
-        >
-        <a
-          mat-button
-          routerLink="/consumables"
-          routerLinkActive="active"
-          aria-label="Consumables"
-          disabled="true"
-          >Consumables</a
-        >
-      </div>
+
+      @if (!mobileView) {
+        <div class="nav-links">
+          <a
+            mat-button
+            routerLink="/gear"
+            routerLinkActive="active"
+            aria-label="Gear"
+            >Gear</a
+          >
+          <a
+            mat-button
+            routerLink="/trophies"
+            routerLinkActive="active"
+            aria-label="Trophies"
+            disabled="true"
+            >Trophies</a
+          >
+          <a
+            mat-button
+            routerLink="/sets"
+            routerLinkActive="active"
+            aria-label="Sets"
+            disabled="true"
+            >Sets</a
+          >
+          <a
+            mat-button
+            routerLink="/consumables"
+            routerLinkActive="active"
+            aria-label="Consumables"
+            disabled="true"
+            >Consumables</a
+          >
+        </div>
+      }
     </section>
 
     <section class="links">
-      <a href="#">
-        <button mat-icon-button aria-label="Discord">
+      <a target="_blank">
+        <button mat-icon-button aria-label="Discord" disabled="true">
           <i class="fa-brands fa-discord"></i>
         </button>
       </a>

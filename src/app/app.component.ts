@@ -21,7 +21,6 @@ interface ResizeEvent {
 @Component({
   selector: 'app-root',
   imports: [
-    RouterOutlet,
     RouterModule,
     MatProgressSpinnerModule,
     MatToolbarModule,
@@ -35,6 +34,7 @@ interface ResizeEvent {
 export class AppComponent implements OnInit {
   readonly #store = inject(AppStore);
   readonly pageLoading = this.#store.pageLoading;
+  readonly isMobileView = this.#store.isMobileView;
 
   readonly resize$: Observable<ResizeEvent> = fromEvent<ResizeEvent>(
     window,

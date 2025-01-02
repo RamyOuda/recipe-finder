@@ -1,4 +1,4 @@
-@let isMobile = isMobileView();
+@let mobileView = isMobileView();
 @let formSubmitted = isFormSubmitted();
 @let networkErr = networkError();
 
@@ -10,7 +10,7 @@
     <img src="facepalm.png" alt="Facepalm" />
   </section>
 } @else {
-  @if (!isMobile || !formSubmitted) {
+  @if (!mobileView || !formSubmitted) {
     <section class="inputs">
       <h2>Select Items</h2>
 
@@ -83,7 +83,7 @@
     </section>
   }
 
-  @if (!isMobile || formSubmitted) {
+  @if (!mobileView || formSubmitted) {
     <section class="recipe">
       @if (resourcesLoading()) {
         <div class="resource-spinner">
@@ -94,7 +94,7 @@
           <h2>Required Materials</h2>
 
           <div class="recipe-actions">
-            @if (isMobile) {
+            @if (mobileView) {
               <button mat-raised-button color="primary" (click)="backToForm()">
                 Back to item selection
                 <i class="fa-solid fa-rotate-left"></i>
@@ -110,7 +110,7 @@
           <div class="resource-container">
             @for (resource of formattedResources(); track $index) {
               <div class="resource">
-                <div class="img-container">
+                <div class="image-container">
                   @if (resource.subtype === "equipment") {
                     <i
                       class="fa-solid fa-circle-exclamation"
@@ -120,7 +120,7 @@
                   }
 
                   <img
-                    class="resource-img"
+                    class="resource-image"
                     [src]="resource.imageUrl"
                     alt="resource"
                   />
@@ -131,6 +131,13 @@
                 >
               </div>
             }
+          </div>
+        } @else {
+          <div class="await-submit">
+            <div>
+              <img src="osamodas.png" alt="Osamodas" />
+            </div>
+            <p>Resources will appear here once you have submitted the form.</p>
           </div>
         }
       }
