@@ -1,6 +1,5 @@
 @let loading = pageLoading();
 @let mobileView = isMobileView();
-@let networkErr = networkError();
 
 <header>
   <mat-toolbar>
@@ -43,8 +42,6 @@
     <div class="spinner-container">
       <mat-spinner></mat-spinner>
     </div>
-  } @else if (networkErr) {
-    <network-error-page></network-error-page>
   } @else {
     <router-outlet></router-outlet>
   }

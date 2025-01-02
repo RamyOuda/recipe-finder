@@ -17,7 +17,7 @@ interface AppState {
   formattedItems: FormattedItems | null;
   formattedResources: FormattedResourceResponse[];
   isMobileView: boolean;
-  networkError: boolean;
+  networkErrorDetected: boolean;
 }
 
 const initialState: AppState = {
@@ -26,7 +26,7 @@ const initialState: AppState = {
   formattedItems: null,
   formattedResources: [],
   isMobileView: window.innerWidth <= 1000,
-  networkError: false,
+  networkErrorDetected: false,
 };
 
 export const AppStore = signalStore(
@@ -53,10 +53,12 @@ export const AppStore = signalStore(
               },
               error: (err: HttpErrorResponse) => {
                 console.error(err.message);
+
                 patchState(store, {
                   pageLoading: false,
-                  networkError: true,
+                  networkErrorDetected: true,
                 });
+
                 return EMPTY;
               },
             }),
@@ -81,11 +83,13 @@ export const AppStore = signalStore(
               },
               error: (err: HttpErrorResponse) => {
                 console.error(err.message);
+
                 patchState(store, {
                   resourcesLoading: false,
                   formattedResources: [],
-                  networkError: true,
+                  networkErrorDetected: true,
                 });
+
                 return EMPTY;
               },
             }),

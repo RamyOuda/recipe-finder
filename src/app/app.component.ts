@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
+  effect,
   inject,
   OnInit,
 } from '@angular/core';
@@ -10,9 +11,8 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatToolbarModule } from '@angular/material/toolbar';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { fromEvent, Observable } from 'rxjs';
-import { NetworkErrorPageComponent } from './network-error-page/network-error-page.component';
 import { AppStore } from './store/app.store';
 
 interface ResizeEvent {
@@ -30,7 +30,6 @@ interface ResizeEvent {
     MatToolbarModule,
     MatButtonModule,
     MatSidenavModule,
-    NetworkErrorPageComponent,
   ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',
@@ -39,9 +38,11 @@ interface ResizeEvent {
 })
 export class AppComponent implements OnInit {
   readonly #store = inject(AppStore);
+  readonly #router = inject(Router);
+
   readonly pageLoading = this.#store.pageLoading;
   readonly isMobileView = this.#store.isMobileView;
-  readonly networkError = this.#store.networkError;
+  readonly networkErrorDetected = this.#store.networkErrorDetected;
 
   readonly resize$: Observable<ResizeEvent> = fromEvent<ResizeEvent>(
     window,
@@ -49,6 +50,12 @@ export class AppComponent implements OnInit {
   );
 
   constructor() {
+    effect(() => {
+      if (this.networkErrorDetected()) {
+        this.#router.navigate(['/error']);
+      }
+    });
+
     this.resize$.pipe(takeUntilDestroyed()).subscribe((event: ResizeEvent) => {
       this.#store.updateView(event.target.innerWidth <= 1000);
     });
