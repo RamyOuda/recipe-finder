@@ -14,39 +14,7 @@
       <img src="cawwot.png" alt="Cawwot" />
 
       @if (!mobileView) {
-        <div class="nav-links-desktop">
-          <a
-            mat-button
-            routerLink="/gear"
-            routerLinkActive="active"
-            aria-label="Gear"
-            >Gear</a
-          >
-          <a
-            mat-button
-            routerLink="/trophies"
-            routerLinkActive="active"
-            aria-label="Trophies"
-            disabled="true"
-            >Trophies</a
-          >
-          <a
-            mat-button
-            routerLink="/sets"
-            routerLinkActive="active"
-            aria-label="Sets"
-            disabled="true"
-            >Sets</a
-          >
-          <a
-            mat-button
-            routerLink="/consumables"
-            routerLinkActive="active"
-            aria-label="Consumables"
-            disabled="true"
-            >Consumables</a
-          >
-        </div>
+        <ng-container [ngTemplateOutlet]="navList"></ng-container>
       }
     </section>
 
@@ -67,43 +35,7 @@
 
 <mat-drawer-container>
   <mat-drawer #drawer mode="over">
-    <div class="nav-links-mobile">
-      <a
-        mat-button
-        routerLink="/gear"
-        routerLinkActive="active"
-        aria-label="Gear"
-        (click)="drawer.toggle()"
-        ><i class="fa-solid fa-shirt"></i> Gear</a
-      >
-      <a
-        mat-button
-        routerLink="/trophies"
-        routerLinkActive="active"
-        aria-label="Trophies"
-        (click)="drawer.toggle()"
-        disabled="true"
-        ><i class="fa-solid fa-trophy"></i> Trophies</a
-      >
-      <a
-        mat-button
-        routerLink="/sets"
-        routerLinkActive="active"
-        aria-label="Sets"
-        (click)="drawer.toggle()"
-        disabled="true"
-        ><i class="fa-solid fa-shield-halved"></i> Sets</a
-      >
-      <a
-        mat-button
-        routerLink="/consumables"
-        routerLinkActive="active"
-        aria-label="Consumables"
-        (click)="drawer.toggle()"
-        disabled="true"
-        ><i class="fa-solid fa-flask"></i> Consumables</a
-      >
-    </div>
+    <ng-container [ngTemplateOutlet]="navList"></ng-container>
   </mat-drawer>
 
   @if (loading) {
@@ -114,3 +46,43 @@
     <router-outlet></router-outlet>
   }
 </mat-drawer-container>
+
+<ng-template #navList>
+  <div [ngClass]="mobileView ? 'nav-links-mobile' : 'nav-links-desktop'">
+    <a
+      mat-button
+      routerLink="/gear"
+      routerLinkActive="active"
+      aria-label="Gear"
+      (click)="drawer.toggle()"
+      ><i class="fa-solid fa-shirt"></i> Gear</a
+    >
+    <a
+      mat-button
+      routerLink="/trophies"
+      routerLinkActive="active"
+      aria-label="Trophies"
+      (click)="drawer.toggle()"
+      disabled="true"
+      ><i class="fa-solid fa-trophy"></i> Trophies</a
+    >
+    <a
+      mat-button
+      routerLink="/sets"
+      routerLinkActive="active"
+      aria-label="Sets"
+      (click)="drawer.toggle()"
+      disabled="true"
+      ><i class="fa-solid fa-shield-halved"></i> Sets</a
+    >
+    <a
+      mat-button
+      routerLink="/consumables"
+      routerLinkActive="active"
+      aria-label="Consumables"
+      (click)="drawer.toggle()"
+      disabled="true"
+      ><i class="fa-solid fa-flask"></i> Consumables</a
+    >
+  </div>
+</ng-template>
