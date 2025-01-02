@@ -30,17 +30,17 @@ import { AppStore } from '../store/app.store';
 @Component({
   selector: 'gear-recipe-page',
   imports: [
-    FormsModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatAutocompleteModule,
-    ReactiveFormsModule,
-    MatButtonModule,
-    MatProgressSpinnerModule,
-    MatTooltipModule,
-    MatIconModule,
     AsyncPipe,
     DecimalPipe,
+    FormsModule,
+    MatAutocompleteModule,
+    MatButtonModule,
+    MatFormFieldModule,
+    MatIconModule,
+    MatInputModule,
+    MatProgressSpinnerModule,
+    MatTooltipModule,
+    ReactiveFormsModule,
   ],
   templateUrl: './gear-recipe-page.component.html',
   styleUrl: './gear-recipe-page.component.scss',
@@ -56,7 +56,6 @@ export class GearRecipePageComponent {
   readonly formattedResources = this.#store.formattedResources;
   readonly resourcesLoading = this.#store.resourcesLoading;
   readonly isMobileView = this.#store.isMobileView;
-  readonly networkError = this.#store.networkError;
 
   readonly isFormSubmitted = signal<boolean>(false);
 
@@ -149,7 +148,10 @@ export class GearRecipePageComponent {
   copyResources(): void {
     const formattedText: string = this.formattedResources()
       .map(({ name, quantity, subtype }) => {
-        return `${subtype === 'equipment' ? '[! Equipment] - ' : ''}${name}: x${quantity}`;
+        const prefix: string =
+          subtype === 'equipment' ? '[! Equipment] - ' : '';
+
+        return `${prefix}${name}: x${quantity}`;
       })
       .join('\n');
 

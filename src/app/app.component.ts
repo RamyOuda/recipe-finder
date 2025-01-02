@@ -12,6 +12,7 @@ import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { RouterModule } from '@angular/router';
 import { fromEvent, Observable } from 'rxjs';
+import { NetworkErrorPageComponent } from './network-error-page/network-error-page.component';
 import { AppStore } from './store/app.store';
 
 interface ResizeEvent {
@@ -29,6 +30,7 @@ interface ResizeEvent {
     MatToolbarModule,
     MatButtonModule,
     MatSidenavModule,
+    NetworkErrorPageComponent,
   ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',
@@ -39,6 +41,7 @@ export class AppComponent implements OnInit {
   readonly #store = inject(AppStore);
   readonly pageLoading = this.#store.pageLoading;
   readonly isMobileView = this.#store.isMobileView;
+  readonly networkError = this.#store.networkError;
 
   readonly resize$: Observable<ResizeEvent> = fromEvent<ResizeEvent>(
     window,
