@@ -49,40 +49,53 @@
 
 <ng-template #navList>
   <div [ngClass]="mobileView ? 'nav-links-mobile' : 'nav-links-desktop'">
-    <a
-      mat-button
-      routerLink="/gear"
-      routerLinkActive="active"
-      aria-label="Gear"
-      (click)="drawer.toggle()"
-      ><i class="fa-solid fa-shirt"></i> Gear</a
-    >
-    <a
-      mat-button
-      routerLink="/trophies"
-      routerLinkActive="active"
-      aria-label="Trophies"
-      (click)="drawer.toggle()"
-      disabled="true"
-      ><i class="fa-solid fa-trophy"></i> Trophies</a
-    >
-    <a
-      mat-button
-      routerLink="/sets"
-      routerLinkActive="active"
-      aria-label="Sets"
-      (click)="drawer.toggle()"
-      disabled="true"
-      ><i class="fa-solid fa-shield-halved"></i> Sets</a
-    >
-    <a
-      mat-button
-      routerLink="/consumables"
-      routerLinkActive="active"
-      aria-label="Consumables"
-      (click)="drawer.toggle()"
-      disabled="true"
-      ><i class="fa-solid fa-flask"></i> Consumables</a
-    >
+    <section>
+      <a
+        mat-button
+        routerLink="/gear"
+        routerLinkActive="active"
+        aria-label="Gear"
+        (click)="drawer.close()"
+        ><i class="fa-solid fa-shirt"></i> Gear</a
+      >
+      <a
+        mat-button
+        routerLink="/trophies"
+        routerLinkActive="active"
+        aria-label="Trophies"
+        (click)="drawer.close()"
+        disabled="true"
+        ><i class="fa-solid fa-trophy"></i> Trophies</a
+      >
+      <a
+        mat-button
+        routerLink="/sets"
+        routerLinkActive="active"
+        aria-label="Sets"
+        (click)="drawer.close()"
+        disabled="true"
+        ><i class="fa-solid fa-shield-halved"></i> Sets</a
+      >
+      <a
+        mat-button
+        routerLink="/consumables"
+        routerLinkActive="active"
+        aria-label="Consumables"
+        (click)="drawer.close()"
+        disabled="true"
+        ><i class="fa-solid fa-flask"></i> Consumables</a
+      >
+    </section>
+    <section>
+      <a
+        mat-button
+        routerLink="/changelog"
+        routerLinkActive="active"
+        aria-label="Changelog"
+        (click)="drawer.close()"
+        disabled="true"
+        ><i class="fa-solid fa-scroll"></i> Changelog v0.0.1</a
+      >
+    </section>
   </div>
 </ng-template>

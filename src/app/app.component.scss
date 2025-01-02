@@ -13,6 +13,7 @@
       display: flex;
       align-items: center;
       gap: 8px;
+      width: 100%;
 
       button {
         .fa-bars {
@@ -26,8 +27,9 @@
       }
 
       .nav-links-desktop {
+        width: 100%;
         display: flex;
-        gap: 4px;
+        justify-content: space-between;
 
         a {
           border-radius: 8px;
@@ -67,15 +69,24 @@
       .nav-links-mobile {
         display: flex;
         flex-direction: column;
+        justify-content: space-between;
+        height: 100%;
 
-        a {
-          height: 48px;
-          width: 100%;
-          border-radius: 0;
-          font-size: 1.5rem;
-          justify-content: flex-start;
-          border-bottom: 1px solid gray;
-          padding: 40px 16px;
+        section {
+          a {
+            height: 48px;
+            width: 100%;
+            border-radius: 0;
+            font-size: 1.5rem;
+            justify-content: flex-start;
+            border-bottom: 1px solid gray;
+            padding: 40px 16px;
+          }
+
+          &:last-child a {
+            border-top: 1px solid gray;
+            border-bottom: unset;
+          }
         }
 
         .active {

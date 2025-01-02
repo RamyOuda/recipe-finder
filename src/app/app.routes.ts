@@ -6,6 +6,7 @@ export const routes: Routes = [
   // { path: 'trophies', component: },
   // { path: 'sets', component: },
   // { path: 'consumables', component: },
+  // { path: 'changelog', component: },
   { path: '', redirectTo: '/gear', pathMatch: 'full' },
   { path: '**', redirectTo: '/gear', pathMatch: 'full' },
 ];
