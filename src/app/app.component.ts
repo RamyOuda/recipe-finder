@@ -4,13 +4,29 @@ import {
   inject,
   OnInit,
 } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { MatButtonModule } from '@angular/material/button';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { RouterOutlet } from '@angular/router';
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { RouterModule, RouterOutlet } from '@angular/router';
+import { fromEvent, Observable } from 'rxjs';
 import { AppStore } from './store/app.store';
+
+interface ResizeEvent {
+  target: {
+    innerWidth: number;
+  };
+}
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, MatProgressSpinnerModule],
+  imports: [
+    RouterOutlet,
+    RouterModule,
+    MatProgressSpinnerModule,
+    MatToolbarModule,
+    MatButtonModule,
+  ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',
   standalone: true,
@@ -20,7 +36,22 @@ export class AppComponent implements OnInit {
   readonly #store = inject(AppStore);
   readonly pageLoading = this.#store.pageLoading;
 
+  readonly resize$: Observable<ResizeEvent> = fromEvent<ResizeEvent>(
+    window,
+    'resize',
+  );
+
+  constructor() {
+    this.resize$.pipe(takeUntilDestroyed()).subscribe((event: ResizeEvent) => {
+      this.#store.updateView(event.target.innerWidth <= 1000);
+    });
+  }
+
   ngOnInit(): void {
     this.#store.fetchData();
+  }
+
+  expandMenu(): void {
+    console.log('Menu button clicked');
   }
 }

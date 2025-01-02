@@ -6,7 +6,6 @@ import {
   inject,
   signal,
 } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
   AbstractControl,
   FormControl,
@@ -24,15 +23,9 @@ import { MatInputModule } from '@angular/material/input';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { fromEvent, map, Observable, of, startWith } from 'rxjs';
+import { map, Observable, of, startWith } from 'rxjs';
 import { FormattedItem, FormattedResource } from '../models/app.model';
 import { AppStore } from '../store/app.store';
-
-interface ResizeEvent {
-  target: {
-    innerWidth: number;
-  };
-}
 
 @Component({
   selector: 'gear-recipe-page',
@@ -62,15 +55,11 @@ export class GearRecipePageComponent {
   readonly formattedItems = this.#store.formattedItems;
   readonly formattedResources = this.#store.formattedResources;
   readonly resourcesLoading = this.#store.resourcesLoading;
+  readonly isMobileView = this.#store.isMobileView;
   readonly networkError = this.#store.networkError;
 
-  readonly isMobileView = signal<boolean>(window.innerWidth <= 1000);
   readonly isFormSubmitted = signal<boolean>(false);
 
-  readonly resize$: Observable<ResizeEvent> = fromEvent<ResizeEvent>(
-    window,
-    'resize',
-  );
   filteredOptions$: Observable<FormattedItem[]> = of([]);
 
   readonly equipmentInputs: { control: string; label: string }[] = [
@@ -97,12 +86,6 @@ export class GearRecipePageComponent {
     weapon: new FormControl(null, this.inputValidator()),
   });
 
-  constructor() {
-    this.resize$.pipe(takeUntilDestroyed()).subscribe((event: ResizeEvent) => {
-      this.isMobileView.set(event.target.innerWidth <= 1000);
-    });
-  }
-
   onInputSelected(itemType: string): void {
     const formControl = this.equipmentForm.get(itemType) as FormControl;
 
@@ -126,11 +109,10 @@ export class GearRecipePageComponent {
     let isValid = false;
 
     for (const key in formValue) {
-      let value: any = formValue[key as keyof typeof formValue];
-
-      if (value === '') {
-        value = null;
-      }
+      const value = formValue[key as keyof typeof formValue] as
+        | FormattedItem
+        | string
+        | null;
 
       if (value && typeof value === 'object') {
         isValid = true;

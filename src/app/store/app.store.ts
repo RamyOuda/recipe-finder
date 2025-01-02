@@ -16,6 +16,7 @@ interface AppState {
   resourcesLoading: boolean;
   formattedItems: FormattedItems | null;
   formattedResources: FormattedResourceResponse[];
+  isMobileView: boolean;
   networkError: boolean;
 }
 
@@ -24,6 +25,7 @@ const initialState: AppState = {
   resourcesLoading: false,
   formattedItems: null,
   formattedResources: [],
+  isMobileView: window.innerWidth <= 1000,
   networkError: false,
 };
 
@@ -31,6 +33,10 @@ export const AppStore = signalStore(
   { providedIn: 'root' },
   withState(initialState),
   withMethods((store, service = inject(AppService)) => ({
+    updateView(isMobileView: boolean): void {
+      patchState(store, { isMobileView });
+    },
+
     fetchData: rxMethod<void>(
       pipe(
         tap(() => {
