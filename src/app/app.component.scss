@@ -22,8 +22,17 @@
         }
       }
 
-      img {
-        height: 32px;
+      .title {
+        display: flex;
+        align-items: center;
+        text-decoration: none;
+        color: #e0e3e2;
+        border-radius: 8px;
+        padding: 8px;
+
+        img {
+          height: 32px;
+        }
       }
 
       .nav-links-desktop {

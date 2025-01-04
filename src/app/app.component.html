@@ -10,8 +10,10 @@
         </button>
       }
 
-      <span>Recipe Finder</span>
-      <img src="cawwot.png" alt="Cawwot" />
+      <a class="title" routerLink="/gear">
+        <span>Recipe Finder</span>
+        <img src="cawwot.png" alt="Cawwot" />
+      </a>
 
       @if (!mobileView) {
         <ng-container [ngTemplateOutlet]="navList"></ng-container>
