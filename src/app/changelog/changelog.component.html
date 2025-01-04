@@ -1,0 +1,19 @@
+<h1>Changelog</h1>
+
+<div class="content-container">
+  <section class="changes">
+    @for (log of logs; track log.version) {
+      <h4>v{{ log.version }} - {{ log.date }}</h4>
+
+      <ul>
+        @for (change of log.changes; track $index) {
+          <li>{{ change }}</li>
+        }
+      </ul>
+    }
+  </section>
+
+  <section class="icon">
+    <i class="fa-regular fa-folder-open"></i>
+  </section>
+</div>

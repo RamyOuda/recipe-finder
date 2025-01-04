@@ -1,0 +1,43 @@
+:host {
+  display: block;
+  margin: 16px;
+
+  .content-container {
+    display: flex;
+    gap: 16px;
+
+    .changes {
+      flex: 1;
+      background-color: #202020;
+      padding: 16px;
+      border-radius: 16px;
+
+      ul {
+        margin-bottom: 48px;
+
+        li {
+          margin-bottom: 8px;
+        }
+      }
+    }
+
+    .icon {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+
+      .fa-folder-open {
+        color: cyan;
+        font-size: 160px;
+      }
+    }
+  }
+}
+
+@media (width <= 1000px) {
+  :host {
+    .content-container {
+      flex-direction: column;
+    }
+  }
+}
