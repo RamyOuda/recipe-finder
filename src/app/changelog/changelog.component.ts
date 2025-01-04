@@ -13,9 +13,14 @@ export class ChangelogComponent {
     changes: string[];
   }[] = [
     {
-      version: '0.0.2',
+      version: '0.2.0',
       date: 'Jan 4, 2025',
-      changes: ['Enabled changelog page'],
+      changes: ['Enabled changelog page', 'Enabled Discord link'],
+    },
+    {
+      version: '0.1.0',
+      date: 'Jan 2, 2025',
+      changes: ['Site live! (beta)'],
     },
   ];
 }
