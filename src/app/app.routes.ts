@@ -13,7 +13,6 @@ export const routes: Routes = [
   {
     path: 'changelog',
     component: ChangelogComponent,
-    canActivate: [ErrorGuard],
   },
   {
     path: 'error',
