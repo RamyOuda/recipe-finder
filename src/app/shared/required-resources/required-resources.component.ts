@@ -4,11 +4,17 @@ import { Component, inject, output } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { AppStore } from '../../store/app.store';
 
 @Component({
   selector: 'required-resources',
-  imports: [DecimalPipe, MatButtonModule, MatProgressSpinnerModule],
+  imports: [
+    DecimalPipe,
+    MatButtonModule,
+    MatProgressSpinnerModule,
+    MatTooltipModule,
+  ],
   templateUrl: './required-resources.component.html',
   styleUrl: './required-resources.component.scss',
 })
