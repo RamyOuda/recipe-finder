@@ -28,7 +28,7 @@
                 @for (option of filteredOptions$ | async; track $index) {
                   <mat-option [value]="option">
                     <div class="mat-option-container">
-                      <img [src]="option.imageUrl" />
+                      <img [src]="option.imageUrl" loading="lazy" />
                       <span>{{ option.name }}</span>
                     </div>
                   </mat-option>
@@ -75,7 +75,7 @@
                 @for (option of filteredOptions$ | async; track $index) {
                   <mat-option [value]="option">
                     <div class="mat-option-container">
-                      <img [src]="option.imageUrl" />
+                      <img [src]="option.imageUrl" loading="lazy" />
                       <span>{{ option.name }}</span>
                     </div>
                   </mat-option>
