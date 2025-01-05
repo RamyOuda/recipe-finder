@@ -6,7 +6,7 @@ import { Component } from '@angular/core';
   templateUrl: './changelog-page.component.html',
   styleUrl: './changelog-page.component.scss',
 })
-export class ChangelogComponent {
+export class ChangelogPageComponent {
   readonly logs: {
     version: string;
     date: string;

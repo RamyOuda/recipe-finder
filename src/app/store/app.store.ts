@@ -37,6 +37,10 @@ export const AppStore = signalStore(
       patchState(store, { isMobileView });
     },
 
+    clearFormattedResources(): void {
+      patchState(store, { formattedResources: [] });
+    },
+
     fetchData: rxMethod<void>(
       pipe(
         tap(() => {

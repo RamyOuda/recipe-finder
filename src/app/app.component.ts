@@ -11,7 +11,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatToolbarModule } from '@angular/material/toolbar';
-import { Router, RouterModule } from '@angular/router';
+import { NavigationEnd, Router, RouterModule } from '@angular/router';
 import { fromEvent, Observable } from 'rxjs';
 import { AppStore } from './store/app.store';
 
@@ -58,6 +58,12 @@ export class AppComponent implements OnInit {
 
     this.resize$.pipe(takeUntilDestroyed()).subscribe((event: ResizeEvent) => {
       this.#store.updateView(event.target.innerWidth <= 1000);
+    });
+
+    this.#router.events.pipe(takeUntilDestroyed()).subscribe((event) => {
+      if (event instanceof NavigationEnd) {
+        this.#store.clearFormattedResources();
+      }
     });
   }
 

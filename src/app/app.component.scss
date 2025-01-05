@@ -40,12 +40,15 @@
         display: flex;
         justify-content: space-between;
 
-        a {
-          border-radius: 8px;
-        }
+        section {
+          a {
+            margin: 0 2px;
+            border-radius: 8px;
+          }
 
-        .active {
-          background-color: #303030;
+          .active {
+            background-color: #303030;
+          }
         }
       }
     }

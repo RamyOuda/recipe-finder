@@ -1,5 +1,4 @@
-import { Clipboard } from '@angular/cdk/clipboard';
-import { AsyncPipe, DecimalPipe } from '@angular/common';
+import { AsyncPipe } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -21,17 +20,16 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { map, Observable, of, startWith } from 'rxjs';
-import { FormattedItem, FormattedResource } from '../models/app.model';
-import { AppStore } from '../store/app.store';
+import { FormattedItem, FormattedResource } from '../../models/app.model';
+import { RequiredResourcesComponent } from '../../shared/required-resources/required-resources.component';
+import { AppStore } from '../../store/app.store';
 
 @Component({
   selector: 'gear-recipe-page',
   imports: [
     AsyncPipe,
-    DecimalPipe,
     FormsModule,
     MatAutocompleteModule,
     MatButtonModule,
@@ -41,20 +39,18 @@ import { AppStore } from '../store/app.store';
     MatProgressSpinnerModule,
     MatTooltipModule,
     ReactiveFormsModule,
+    RequiredResourcesComponent,
   ],
-  templateUrl: './gear-recipe-page.component.html',
-  styleUrl: './gear-recipe-page.component.scss',
+  templateUrl: './gear-page.component.html',
+  styleUrl: './gear-page.component.scss',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class GearRecipePageComponent {
+export class GearPageComponent {
   readonly #store = inject(AppStore);
-  readonly #clipboard = inject(Clipboard);
-  readonly #snackBar = inject(MatSnackBar);
 
   readonly formattedItems = this.#store.formattedItems;
   readonly formattedResources = this.#store.formattedResources;
-  readonly resourcesLoading = this.#store.resourcesLoading;
   readonly isMobileView = this.#store.isMobileView;
 
   readonly isFormSubmitted = signal<boolean>(false);
@@ -143,23 +139,6 @@ export class GearRecipePageComponent {
 
   backToForm(): void {
     this.isFormSubmitted.set(false);
-  }
-
-  copyResources(): void {
-    const formattedText: string = this.formattedResources()
-      .map(({ name, quantity, subtype }) => {
-        const prefix: string =
-          subtype === 'equipment' ? '[! Equipment] - ' : '';
-
-        return `${prefix}${name}: x${quantity}`;
-      })
-      .join('\n');
-
-    this.#clipboard.copy(formattedText);
-
-    this.#snackBar.open('Resources copied to clipboard!', 'Hurray!', {
-      duration: 2000,
-    });
   }
 
   private filter(

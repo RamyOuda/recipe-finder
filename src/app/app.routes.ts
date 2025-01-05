@@ -1,18 +1,24 @@
 import { Routes } from '@angular/router';
-import { ChangelogComponent } from './changelog-page/changelog-page.component';
-import { GearRecipePageComponent } from './gear-recipe-page/gear-recipe-page.component';
 import { ErrorGuard } from './guards/error.guard';
-import { NetworkErrorPageComponent } from './network-error-page/network-error-page.component';
+import { ChangelogPageComponent } from './pages/changelog-page/changelog-page.component';
+import { GearPageComponent } from './pages/gear-page/gear-page.component';
+import { NetworkErrorPageComponent } from './pages/network-error-page/network-error-page.component';
+import { TrophiesPageComponent } from './pages/trophies-page/trophies-page.component';
 
 export const routes: Routes = [
   {
     path: 'gear',
-    component: GearRecipePageComponent,
+    component: GearPageComponent,
+    canActivate: [ErrorGuard],
+  },
+  {
+    path: 'trophies',
+    component: TrophiesPageComponent,
     canActivate: [ErrorGuard],
   },
   {
     path: 'changelog',
-    component: ChangelogComponent,
+    component: ChangelogPageComponent,
   },
   {
     path: 'error',

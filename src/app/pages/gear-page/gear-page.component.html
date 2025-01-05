@@ -76,61 +76,20 @@
 
 @if (!mobileView || formSubmitted) {
   <section class="recipe">
-    @if (resourcesLoading()) {
-      <div class="resource-spinner">
-        <mat-spinner></mat-spinner>
-      </div>
+    @let resources = formattedResources();
+
+    @if (resources.length) {
+      <required-resources
+        [formattedResources]="resources"
+        (backEvent)="backToForm()"
+      ></required-resources>
     } @else {
-      @if (formattedResources().length) {
-        <h2>Required Materials</h2>
-
-        <div class="recipe-actions">
-          @if (mobileView) {
-            <button mat-raised-button color="primary" (click)="backToForm()">
-              Back to item selection
-              <i class="fa-solid fa-rotate-left"></i>
-            </button>
-          }
-
-          <button mat-raised-button color="primary" (click)="copyResources()">
-            Copy Resources
-            <i class="fa-solid fa-copy"></i>
-          </button>
+      <div class="await-submit">
+        <div>
+          <img src="osamodas.png" alt="Osamodas" />
         </div>
-
-        <div class="resource-container">
-          @for (resource of formattedResources(); track $index) {
-            <div class="resource">
-              <div class="image-container">
-                @if (resource.subtype === "equipment") {
-                  <i
-                    class="fa-solid fa-circle-exclamation"
-                    matTooltip="This is an equipment item"
-                    matTooltipPosition="above"
-                  ></i>
-                }
-
-                <img
-                  class="resource-image"
-                  [src]="resource.imageUrl"
-                  alt="resource"
-                />
-              </div>
-              <span class="resource-name">{{ resource.name }}</span>
-              <span class="resource-quantity"
-                >x{{ resource.quantity | number: "1.0-0" }}</span
-              >
-            </div>
-          }
-        </div>
-      } @else {
-        <div class="await-submit">
-          <div>
-            <img src="osamodas.png" alt="Osamodas" />
-          </div>
-          <p>Resources will appear here once the form has been submitted.</p>
-        </div>
-      }
+        <p>Resources will appear here once the form has been submitted.</p>
+      </div>
     }
   </section>
 }
