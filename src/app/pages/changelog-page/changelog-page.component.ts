@@ -13,6 +13,14 @@ export class ChangelogPageComponent {
     changes: string[];
   }[] = [
     {
+      version: '0.3.0',
+      date: 'Jan 5, 2025',
+      changes: [
+        'Added trophy inputs to Gear page',
+        'Added item images to dropdown menus',
+      ],
+    },
+    {
       version: '0.2.0',
       date: 'Jan 4, 2025',
       changes: ['Enabled changelog page', 'Enabled Discord link'],
