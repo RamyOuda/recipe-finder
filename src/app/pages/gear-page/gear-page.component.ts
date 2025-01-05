@@ -16,6 +16,7 @@ import {
 } from '@angular/forms';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatButtonModule } from '@angular/material/button';
+import { MatDividerModule } from '@angular/material/divider';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
@@ -33,6 +34,7 @@ import { AppStore } from '../../store/app.store';
     FormsModule,
     MatAutocompleteModule,
     MatButtonModule,
+    MatDividerModule,
     MatFormFieldModule,
     MatIconModule,
     MatInputModule,
@@ -112,9 +114,7 @@ export class GearPageComponent {
   });
 
   onInputSelected(controlName: string): void {
-    const groupName: string = controlName.includes('trophy')
-      ? 'trophies'
-      : 'equipment';
+    const groupName: string = this.getFormGroupName(controlName);
     const control: string = `${groupName}.${controlName}`;
     const formControl = this.equipmentForm.get(control) as FormControl;
 
@@ -125,18 +125,14 @@ export class GearPageComponent {
   }
 
   isInputValue(controlName: string): boolean {
-    const groupName: string = controlName.includes('trophy')
-      ? 'trophies'
-      : 'equipment';
+    const groupName: string = this.getFormGroupName(controlName);
     const control: string = `${groupName}.${controlName}`;
 
     return !!this.equipmentForm.get(control)?.value;
   }
 
   clearInput(controlName: string): void {
-    const groupName: string = controlName.includes('trophy')
-      ? 'trophies'
-      : 'equipment';
+    const groupName: string = this.getFormGroupName(controlName);
     const control: string = `${groupName}.${controlName}`;
 
     this.equipmentForm.get(control)?.setValue(null);
@@ -223,5 +219,9 @@ export class GearPageComponent {
 
       return isValid ? null : error;
     };
+  }
+
+  private getFormGroupName(controlName: string): string {
+    return controlName.includes('trophy') ? 'trophies' : 'equipment';
   }
 }
