@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 
 @Component({
-  selector: 'network-error-page',
+  selector: 'app-network-error-page',
   imports: [],
   template: `
     <div style="padding-left:16px">

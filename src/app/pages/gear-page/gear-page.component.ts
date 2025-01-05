@@ -27,7 +27,7 @@ import { RequiredResourcesComponent } from '../../shared/required-resources/requ
 import { AppStore } from '../../store/app.store';
 
 @Component({
-  selector: 'gear-recipe-page',
+  selector: 'app-gear-page',
   imports: [
     AsyncPipe,
     FormsModule,

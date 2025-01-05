@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 
 @Component({
-  selector: 'changelog',
+  selector: 'app-changelog-page',
   imports: [],
   templateUrl: './changelog-page.component.html',
   styleUrl: './changelog-page.component.scss',

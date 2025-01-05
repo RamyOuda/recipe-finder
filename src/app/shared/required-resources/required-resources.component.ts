@@ -8,7 +8,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { AppStore } from '../../store/app.store';
 
 @Component({
-  selector: 'required-resources',
+  selector: 'app-required-resources',
   imports: [
     DecimalPipe,
     MatButtonModule,
