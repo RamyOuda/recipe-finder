@@ -57,6 +57,14 @@
       }
     }
   }
+
+  .await-resources {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+  }
 }
 
 @media (width <= 1000px) {

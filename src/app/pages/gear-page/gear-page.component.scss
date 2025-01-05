@@ -46,16 +46,8 @@
     }
   }
 
-  .recipe {
+  .required-resources {
     flex: 1;
-
-    .await-submit {
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      height: 100%;
-    }
   }
 }
 

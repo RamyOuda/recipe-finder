@@ -50,7 +50,6 @@ export class GearPageComponent {
   readonly #store = inject(AppStore);
 
   readonly formattedItems = this.#store.formattedItems;
-  readonly formattedResources = this.#store.formattedResources;
   readonly isMobileView = this.#store.isMobileView;
 
   readonly isFormSubmitted = signal<boolean>(false);
@@ -134,6 +133,8 @@ export class GearPageComponent {
     if (isValid) {
       this.#store.fetchResources(requiredResources);
       this.isFormSubmitted.set(true);
+    } else {
+      this.#store.clearFormattedResources();
     }
   }
 

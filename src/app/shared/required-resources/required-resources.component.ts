@@ -1,11 +1,10 @@
-import { Component, inject, input, output } from '@angular/core';
-import { FormattedResourceResponse } from '../../models/app.model';
-import { DecimalPipe } from '@angular/common';
-import { AppStore } from '../../store/app.store';
-import { MatButtonModule } from '@angular/material/button';
 import { Clipboard } from '@angular/cdk/clipboard';
-import { MatSnackBar } from '@angular/material/snack-bar';
+import { DecimalPipe } from '@angular/common';
+import { Component, inject, output } from '@angular/core';
+import { MatButtonModule } from '@angular/material/button';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { AppStore } from '../../store/app.store';
 
 @Component({
   selector: 'required-resources',
@@ -14,7 +13,6 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
   styleUrl: './required-resources.component.scss',
 })
 export class RequiredResourcesComponent {
-  readonly formattedResources = input.required<FormattedResourceResponse[]>();
   readonly backEvent = output<void>();
 
   readonly #store = inject(AppStore);
@@ -22,6 +20,7 @@ export class RequiredResourcesComponent {
   readonly #snackbar = inject(MatSnackBar);
 
   readonly resourcesLoading = this.#store.resourcesLoading;
+  readonly formattedResources = this.#store.formattedResources;
   readonly isMobileView = this.#store.isMobileView;
 
   backToForm(): void {

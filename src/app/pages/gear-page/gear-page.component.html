@@ -75,21 +75,7 @@
 }
 
 @if (!mobileView || formSubmitted) {
-  <section class="recipe">
-    @let resources = formattedResources();
-
-    @if (resources.length) {
-      <required-resources
-        [formattedResources]="resources"
-        (backEvent)="backToForm()"
-      ></required-resources>
-    } @else {
-      <div class="await-submit">
-        <div>
-          <img src="osamodas.png" alt="Osamodas" />
-        </div>
-        <p>Resources will appear here once the form has been submitted.</p>
-      </div>
-    }
+  <section class="required-resources">
+    <required-resources (backEvent)="backToForm()"></required-resources>
   </section>
 }
