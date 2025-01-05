@@ -111,7 +111,10 @@ export class GearPageComponent {
     }),
   });
 
-  onInputSelected(groupName: string, controlName: string): void {
+  onInputSelected(controlName: string): void {
+    const groupName: string = controlName.includes('trophy')
+      ? 'trophies'
+      : 'equipment';
     const control: string = `${groupName}.${controlName}`;
     const formControl = this.equipmentForm.get(control) as FormControl;
 
@@ -121,12 +124,19 @@ export class GearPageComponent {
     );
   }
 
-  isInputValue(groupName: string, controlName: string): boolean {
+  isInputValue(controlName: string): boolean {
+    const groupName: string = controlName.includes('trophy')
+      ? 'trophies'
+      : 'equipment';
     const control: string = `${groupName}.${controlName}`;
+
     return !!this.equipmentForm.get(control)?.value;
   }
 
-  clearInput(groupName: string, controlName: string): void {
+  clearInput(controlName: string): void {
+    const groupName: string = controlName.includes('trophy')
+      ? 'trophies'
+      : 'equipment';
     const control: string = `${groupName}.${controlName}`;
 
     this.equipmentForm.get(control)?.setValue(null);

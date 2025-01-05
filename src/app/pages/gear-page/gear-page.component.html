@@ -7,8 +7,6 @@
 
     <form [formGroup]="equipmentForm" class="resource-form">
       <div formGroupName="equipment" class="form-group-equipment">
-        @let equipmentGroup = "equipment";
-
         <h3 class="form-group-header">Gear</h3>
 
         @for (input of inputs.equipment; track $index) {
@@ -20,7 +18,7 @@
               matInput
               [formControlName]="input.control"
               [matAutocomplete]="auto"
-              (focus)="onInputSelected(equipmentGroup, input.control)"
+              (focus)="onInputSelected(input.control)"
             />
             <mat-autocomplete
               #auto="matAutocomplete"
@@ -31,12 +29,12 @@
               }
             </mat-autocomplete>
 
-            @if (isInputValue(equipmentGroup, input.control)) {
+            @if (isInputValue(input.control)) {
               <button
                 mat-icon-button
                 matSuffix
                 aria-label="Clear"
-                (click)="clearInput(equipmentGroup, input.control)"
+                (click)="clearInput(input.control)"
               >
                 <mat-icon>close</mat-icon>
               </button>
@@ -46,8 +44,6 @@
       </div>
 
       <div formGroupName="trophies" class="form-group-trophies">
-        @let trophyGroup = "trophies";
-
         <h3 class="form-group-header">Trophies</h3>
 
         @for (input of inputs.trophies; track $index) {
@@ -59,7 +55,7 @@
               matInput
               [formControlName]="input.control"
               [matAutocomplete]="auto"
-              (focus)="onInputSelected(trophyGroup, input.control)"
+              (focus)="onInputSelected(input.control)"
             />
             <mat-autocomplete
               #auto="matAutocomplete"
@@ -70,12 +66,12 @@
               }
             </mat-autocomplete>
 
-            @if (isInputValue(trophyGroup, input.control)) {
+            @if (isInputValue(input.control)) {
               <button
                 mat-icon-button
                 matSuffix
                 aria-label="Clear"
-                (click)="clearInput(trophyGroup, input.control)"
+                (click)="clearInput(input.control)"
               >
                 <mat-icon>close</mat-icon>
               </button>
