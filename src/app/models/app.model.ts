@@ -7,6 +7,7 @@ export interface FormattedItems {
   ring: FormattedItem[];
   shield: FormattedItem[];
   weapon: FormattedItem[];
+  trophy: FormattedItem[];
 }
 
 export interface FormattedItem {

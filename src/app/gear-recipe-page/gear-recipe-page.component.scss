@@ -53,7 +53,7 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      height: 100vh;
+      height: 100%;
     }
 
     h2 {
@@ -131,6 +131,12 @@
 
       .stuff-container {
         flex-direction: column;
+      }
+    }
+
+    .recipe {
+      .resource-spinner {
+        height: 80vh;
       }
     }
   }

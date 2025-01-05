@@ -25,13 +25,14 @@ export class AppService {
       'amulet',
       'ring',
       'shield',
+      'trophy',
     ];
 
     return this.#http
       .get<{ items: ItemResponse[] }>(`${this.baseUrl}/items/equipment/all`)
       .pipe(
-        map(({ items }) => {
-          return items
+        map(({ items }) =>
+          items
             .filter((item: ItemResponse) => item.recipe)
             .reduce(
               (acc: FormattedItems, curr: ItemResponse) => {
@@ -69,9 +70,10 @@ export class AppService {
                 ring: [],
                 shield: [],
                 weapon: [],
+                trophy: [],
               },
-            );
-        }),
+            ),
+        ),
       );
   }
 
@@ -79,8 +81,8 @@ export class AppService {
     resources: FormattedResource[],
   ): Observable<FormattedResourceResponse[]> {
     return forkJoin(
-      resources.map(({ id, subtype, quantity }) => {
-        return this.#http
+      resources.map(({ id, subtype, quantity }) =>
+        this.#http
           .get<ResourceResponse>(`${this.baseUrl}/items/${subtype}/${id}`)
           .pipe(
             map((response: ResourceResponse) => ({
@@ -89,8 +91,8 @@ export class AppService {
               quantity,
               subtype,
             })),
-          );
-      }),
+          ),
+      ),
     );
   }
 }
