@@ -45,6 +45,7 @@ export class AppService {
                 );
 
                 const formattedItem: FormattedItem = {
+                  imageUrl: curr.image_urls.icon,
                   isWeapon: curr.is_weapon,
                   name: curr.name,
                   recipe,

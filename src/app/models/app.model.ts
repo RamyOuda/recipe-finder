@@ -11,6 +11,7 @@ export interface FormattedItems {
 }
 
 export interface FormattedItem {
+  imageUrl: string;
   isWeapon: boolean;
   name: string;
   recipe: FormattedResource[];
@@ -18,6 +19,9 @@ export interface FormattedItem {
 }
 
 export interface ItemResponse {
+  image_urls: {
+    icon: string;
+  };
   is_weapon: boolean;
   name: string;
   recipe: RecipeResponse[];
