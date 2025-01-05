@@ -75,6 +75,15 @@ export class AppService {
               },
             ),
         ),
+        map((items: FormattedItems) => {
+          Object.values(items).forEach((category: FormattedItem[]) => {
+            category.sort((a: FormattedItem, b: FormattedItem) =>
+              a.name.localeCompare(b.name),
+            );
+          });
+
+          return items;
+        }),
       );
   }
 
