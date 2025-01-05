@@ -1,5 +1,5 @@
 import { Routes } from '@angular/router';
-import { ChangelogComponent } from './changelog/changelog.component';
+import { ChangelogComponent } from './changelog-page/changelog-page.component';
 import { GearRecipePageComponent } from './gear-recipe-page/gear-recipe-page.component';
 import { ErrorGuard } from './guards/error.guard';
 import { NetworkErrorPageComponent } from './network-error-page/network-error-page.component';

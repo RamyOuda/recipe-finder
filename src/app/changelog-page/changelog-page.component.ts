@@ -3,8 +3,8 @@ import { Component } from '@angular/core';
 @Component({
   selector: 'changelog',
   imports: [],
-  templateUrl: './changelog.component.html',
-  styleUrl: './changelog.component.scss',
+  templateUrl: './changelog-page.component.html',
+  styleUrl: './changelog-page.component.scss',
 })
 export class ChangelogComponent {
   readonly logs: {
