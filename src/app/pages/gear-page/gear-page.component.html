@@ -2,42 +2,87 @@
 @let formSubmitted = isFormSubmitted();
 
 @if (!mobileView || !formSubmitted) {
-  <section class="inputs">
-    <h2>Select Items</h2>
+  <section class="form-container">
+    <h2 class="form-header">Select Items</h2>
 
-    <form [formGroup]="equipmentForm">
-      @for (input of equipmentInputs; track input.control) {
-        <mat-form-field>
-          <mat-label>{{ input.label }}</mat-label>
-          <input
-            type="text"
-            [attr.aria-label]="input.label"
-            matInput
-            [formControlName]="input.control"
-            [matAutocomplete]="auto"
-            (focus)="onInputSelected(input.control)"
-          />
-          <mat-autocomplete
-            #auto="matAutocomplete"
-            [displayWith]="autocompleteDisplay"
-          >
-            @for (option of filteredOptions$ | async; track $index) {
-              <mat-option [value]="option">{{ option.name }}</mat-option>
-            }
-          </mat-autocomplete>
+    <form [formGroup]="equipmentForm" class="resource-form">
+      <div formGroupName="equipment" class="form-group-equipment">
+        @let equipmentGroup = "equipment";
 
-          @if (equipmentForm.get(input.control)?.value) {
-            <button
-              mat-icon-button
-              matSuffix
-              aria-label="Clear"
-              (click)="clearInput(input.control)"
+        <h3 class="form-group-header">Gear</h3>
+
+        @for (input of inputs.equipment; track $index) {
+          <mat-form-field class="form-field">
+            <mat-label>{{ input.label }}</mat-label>
+            <input
+              type="text"
+              [attr.aria-label]="input.label"
+              matInput
+              [formControlName]="input.control"
+              [matAutocomplete]="auto"
+              (focus)="onInputSelected(equipmentGroup, input.control)"
+            />
+            <mat-autocomplete
+              #auto="matAutocomplete"
+              [displayWith]="autocompleteDisplay"
             >
-              <mat-icon>close</mat-icon>
-            </button>
-          }
-        </mat-form-field>
-      }
+              @for (option of filteredOptions$ | async; track $index) {
+                <mat-option [value]="option">{{ option.name }}</mat-option>
+              }
+            </mat-autocomplete>
+
+            @if (isInputValue(equipmentGroup, input.control)) {
+              <button
+                mat-icon-button
+                matSuffix
+                aria-label="Clear"
+                (click)="clearInput(equipmentGroup, input.control)"
+              >
+                <mat-icon>close</mat-icon>
+              </button>
+            }
+          </mat-form-field>
+        }
+      </div>
+
+      <div formGroupName="trophies" class="form-group-trophies">
+        @let trophyGroup = "trophies";
+
+        <h3 class="form-group-header">Trophies</h3>
+
+        @for (input of inputs.trophies; track $index) {
+          <mat-form-field class="form-field">
+            <mat-label>{{ input.label }}</mat-label>
+            <input
+              type="text"
+              [attr.aria-label]="input.label"
+              matInput
+              [formControlName]="input.control"
+              [matAutocomplete]="auto"
+              (focus)="onInputSelected(trophyGroup, input.control)"
+            />
+            <mat-autocomplete
+              #auto="matAutocomplete"
+              [displayWith]="autocompleteDisplay"
+            >
+              @for (option of filteredOptions$ | async; track $index) {
+                <mat-option [value]="option">{{ option.name }}</mat-option>
+              }
+            </mat-autocomplete>
+
+            @if (isInputValue(trophyGroup, input.control)) {
+              <button
+                mat-icon-button
+                matSuffix
+                aria-label="Clear"
+                (click)="clearInput(trophyGroup, input.control)"
+              >
+                <mat-icon>close</mat-icon>
+              </button>
+            }
+          </mat-form-field>
+        }
+      </div>
 
       <button
         class="submit"
@@ -49,28 +94,6 @@
         Submit
       </button>
     </form>
-
-    <div class="stuff-container">
-      <div class="info-container">
-        <p>
-          Search and select items in the dropdown menus above. Once the form is
-          submitted, all of the resources required to craft those items will
-          display with a button to copy to clipboard.
-        </p>
-        <p>
-          Only craftable items will appear as options in the dropdown menus.
-        </p>
-      </div>
-
-      <div class="image-container">
-        <img
-          src="OverTheMoon.png"
-          alt="Guild Emblem"
-          matTooltip="Over the Moon"
-          matTooltipPosition="above"
-        />
-      </div>
-    </div>
   </section>
 }
 

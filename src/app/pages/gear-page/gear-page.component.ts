@@ -56,41 +56,80 @@ export class GearPageComponent {
 
   filteredOptions$: Observable<FormattedItem[]> = of([]);
 
-  readonly equipmentInputs: { control: string; label: string }[] = [
-    { control: 'hat', label: 'Select a hat' },
-    { control: 'cloak', label: 'Select a cloak' },
-    { control: 'belt', label: 'Select a belt' },
-    { control: 'boots', label: 'Select boots' },
-    { control: 'amulet', label: 'Select an amulet' },
-    { control: 'ring1', label: 'Select first ring' },
-    { control: 'ring2', label: 'Select second ring' },
-    { control: 'shield', label: 'Select a shield' },
-    { control: 'weapon', label: 'Select a weapon' },
-  ];
+  readonly inputs: {
+    equipment: {
+      control: string;
+      label: string;
+    }[];
+    trophies: {
+      control: string;
+      label: string;
+    }[];
+  } = {
+    equipment: [
+      { control: 'hat', label: 'Select hat' },
+      { control: 'cloak', label: 'Select cloak' },
+      { control: 'belt', label: 'Select belt' },
+      { control: 'boots', label: 'Select boots' },
+      { control: 'amulet', label: 'Select amulet' },
+      { control: 'ring1', label: 'Select ring' },
+      { control: 'ring2', label: 'Select ring' },
+      { control: 'shield', label: 'Select shield' },
+      { control: 'weapon', label: 'Select weapon' },
+    ],
+
+    trophies: [
+      { control: 'trophy1', label: 'Select trophy' },
+      { control: 'trophy2', label: 'Select trophy' },
+      { control: 'trophy3', label: 'Select trophy' },
+      { control: 'trophy4', label: 'Select trophy' },
+      { control: 'trophy5', label: 'Select trophy' },
+      { control: 'trophy6', label: 'Select trophy' },
+    ],
+  };
 
   readonly equipmentForm = new FormGroup({
-    hat: new FormControl(null, this.inputValidator()),
-    cloak: new FormControl(null, this.inputValidator()),
-    belt: new FormControl(null, this.inputValidator()),
-    boots: new FormControl(null, this.inputValidator()),
-    amulet: new FormControl(null, this.inputValidator()),
-    ring1: new FormControl(null, this.inputValidator()),
-    ring2: new FormControl(null, this.inputValidator()),
-    shield: new FormControl(null, this.inputValidator()),
-    weapon: new FormControl(null, this.inputValidator()),
+    equipment: new FormGroup({
+      hat: new FormControl(null, this.inputValidator()),
+      cloak: new FormControl(null, this.inputValidator()),
+      belt: new FormControl(null, this.inputValidator()),
+      boots: new FormControl(null, this.inputValidator()),
+      amulet: new FormControl(null, this.inputValidator()),
+      ring1: new FormControl(null, this.inputValidator()),
+      ring2: new FormControl(null, this.inputValidator()),
+      shield: new FormControl(null, this.inputValidator()),
+      weapon: new FormControl(null, this.inputValidator()),
+    }),
+
+    trophies: new FormGroup({
+      trophy1: new FormControl(null, this.inputValidator()),
+      trophy2: new FormControl(null, this.inputValidator()),
+      trophy3: new FormControl(null, this.inputValidator()),
+      trophy4: new FormControl(null, this.inputValidator()),
+      trophy5: new FormControl(null, this.inputValidator()),
+      trophy6: new FormControl(null, this.inputValidator()),
+    }),
   });
 
-  onInputSelected(itemType: string): void {
-    const formControl = this.equipmentForm.get(itemType) as FormControl;
+  onInputSelected(groupName: string, controlName: string): void {
+    const control: string = `${groupName}.${controlName}`;
+    const formControl = this.equipmentForm.get(control) as FormControl;
 
     this.filteredOptions$ = formControl.valueChanges.pipe(
       startWith(''),
-      map((value) => this.filter(value ?? '', itemType)),
+      map((value) => this.filter(value ?? '', controlName)),
     );
   }
 
-  clearInput(controlName: string): void {
-    this.equipmentForm.get(controlName)?.setValue(null);
+  isInputValue(groupName: string, controlName: string): boolean {
+    const control: string = `${groupName}.${controlName}`;
+    return !!this.equipmentForm.get(control)?.value;
+  }
+
+  clearInput(groupName: string, controlName: string): void {
+    const control: string = `${groupName}.${controlName}`;
+
+    this.equipmentForm.get(control)?.setValue(null);
   }
 
   autocompleteDisplay(item: FormattedItem | null): string {
@@ -100,37 +139,35 @@ export class GearPageComponent {
   onSubmit(): void {
     const formValue = this.equipmentForm.value;
     const requiredResources: FormattedResource[] = [];
-    let isValid = false;
 
-    for (const key in formValue) {
-      const value = formValue[key as keyof typeof formValue] as
-        | FormattedItem
-        | string
-        | null;
+    Object.values(formValue).forEach((formGroup) => {
+      Object.values(formGroup)
+        .filter(
+          (item: FormattedItem | string | null) =>
+            item && typeof item === 'object',
+        )
+        .forEach((equipment: FormattedItem | any) => {
+          equipment.recipe.forEach((resource: FormattedResource) => {
+            const index: number = requiredResources.findIndex(
+              ({ id }) => id === resource.id,
+            );
 
-      if (value && typeof value === 'object') {
-        isValid = true;
+            if (index === -1) {
+              requiredResources.push(resource);
+            } else {
+              const existingResource: FormattedResource =
+                requiredResources[index];
 
-        value.recipe.forEach((resource: FormattedResource) => {
-          const index: number = requiredResources.findIndex(
-            ({ id }) => id === resource.id,
-          );
-
-          if (index === -1) {
-            requiredResources.push(resource);
-          } else {
-            const currentResource: FormattedResource = requiredResources[index];
-
-            requiredResources[index] = {
-              ...currentResource,
-              quantity: currentResource.quantity + resource.quantity,
-            };
-          }
+              requiredResources[index] = {
+                ...existingResource,
+                quantity: existingResource.quantity + resource.quantity,
+              };
+            }
+          });
         });
-      }
-    }
+    });
 
-    if (isValid) {
+    if (requiredResources.length) {
       this.#store.fetchResources(requiredResources);
       this.isFormSubmitted.set(true);
     } else {
@@ -153,6 +190,10 @@ export class GearPageComponent {
 
     if (itemType.includes('ring')) {
       itemType = 'ring';
+    }
+
+    if (itemType.includes('trophy')) {
+      itemType = 'trophy';
     }
 
     if (items) {
