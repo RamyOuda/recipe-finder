@@ -9,79 +9,97 @@
       <div formGroupName="equipment" class="form-group-equipment">
         <h3 class="form-group-header">Gear</h3>
 
-        @for (input of inputs.equipment; track $index) {
-          <mat-form-field class="form-field">
-            <mat-label>{{ input.label }}</mat-label>
-            <input
-              type="text"
-              [attr.aria-label]="input.label"
-              matInput
-              [formControlName]="input.control"
-              [matAutocomplete]="auto"
-              (focus)="onInputSelected(input.control)"
-            />
-            <mat-autocomplete
-              #auto="matAutocomplete"
-              [displayWith]="autocompleteDisplay"
-            >
-              @for (option of filteredOptions$ | async; track $index) {
-                <mat-option [value]="option">{{ option.name }}</mat-option>
-              }
-            </mat-autocomplete>
-
-            @if (isInputValue(input.control)) {
-              <button
-                mat-icon-button
-                matSuffix
-                aria-label="Clear"
-                (click)="clearInput(input.control)"
+        <div class="form-inputs-container">
+          @for (input of inputs.equipment; track $index) {
+            <mat-form-field class="form-field" appearance="outline">
+              <mat-label>{{ input.label }}</mat-label>
+              <input
+                type="text"
+                [attr.aria-label]="input.label"
+                matInput
+                [formControlName]="input.control"
+                [matAutocomplete]="auto"
+                (focus)="onInputSelected(input.control)"
+              />
+              <mat-autocomplete
+                #auto="matAutocomplete"
+                [displayWith]="autocompleteDisplay"
               >
-                <mat-icon>close</mat-icon>
-              </button>
-            }
-          </mat-form-field>
-        }
+                @for (option of filteredOptions$ | async; track $index) {
+                  <mat-option [value]="option">
+                    <div class="mat-option-container">
+                      <img [src]="option.imageUrl" />
+                      <span>{{ option.name }}</span>
+                    </div>
+                  </mat-option>
+                }
+              </mat-autocomplete>
+
+              @if (isInputValue(input.control)) {
+                <button
+                  class="clear-button"
+                  mat-icon-button
+                  matSuffix
+                  aria-label="Clear"
+                  (click)="clearInput(input.control)"
+                >
+                  <mat-icon>close</mat-icon>
+                </button>
+              }
+            </mat-form-field>
+          }
+        </div>
       </div>
+
+      <mat-divider></mat-divider>
 
       <div formGroupName="trophies" class="form-group-trophies">
         <h3 class="form-group-header">Trophies</h3>
 
-        @for (input of inputs.trophies; track $index) {
-          <mat-form-field class="form-field">
-            <mat-label>{{ input.label }}</mat-label>
-            <input
-              type="text"
-              [attr.aria-label]="input.label"
-              matInput
-              [formControlName]="input.control"
-              [matAutocomplete]="auto"
-              (focus)="onInputSelected(input.control)"
-            />
-            <mat-autocomplete
-              #auto="matAutocomplete"
-              [displayWith]="autocompleteDisplay"
-            >
-              @for (option of filteredOptions$ | async; track $index) {
-                <mat-option [value]="option">{{ option.name }}</mat-option>
-              }
-            </mat-autocomplete>
-
-            @if (isInputValue(input.control)) {
-              <button
-                mat-icon-button
-                matSuffix
-                aria-label="Clear"
-                (click)="clearInput(input.control)"
+        <div class="form-inputs-container">
+          @for (input of inputs.trophies; track $index) {
+            <mat-form-field class="form-field" appearance="outline">
+              <mat-label>{{ input.label }}</mat-label>
+              <input
+                type="text"
+                [attr.aria-label]="input.label"
+                matInput
+                [formControlName]="input.control"
+                [matAutocomplete]="auto"
+                (focus)="onInputSelected(input.control)"
+              />
+              <mat-autocomplete
+                #auto="matAutocomplete"
+                [displayWith]="autocompleteDisplay"
               >
-                <mat-icon>close</mat-icon>
-              </button>
-            }
-          </mat-form-field>
-        }
+                @for (option of filteredOptions$ | async; track $index) {
+                  <mat-option [value]="option">
+                    <div class="mat-option-container">
+                      <img [src]="option.imageUrl" />
+                      <span>{{ option.name }}</span>
+                    </div>
+                  </mat-option>
+                }
+              </mat-autocomplete>
+
+              @if (isInputValue(input.control)) {
+                <button
+                  class="clear-button"
+                  mat-icon-button
+                  matSuffix
+                  aria-label="Clear"
+                  (click)="clearInput(input.control)"
+                >
+                  <mat-icon>close</mat-icon>
+                </button>
+              }
+            </mat-form-field>
+          }
+        </div>
       </div>
 
       <button
-        class="submit"
+        class="form-submit"
         mat-raised-button
         color="primary"
         type="submit"
