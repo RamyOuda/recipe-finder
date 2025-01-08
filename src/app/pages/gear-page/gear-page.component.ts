@@ -2,6 +2,7 @@ import { AsyncPipe } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
+  effect,
   inject,
   signal,
 } from '@angular/core';
@@ -53,10 +54,19 @@ export class GearPageComponent {
 
   readonly formattedItems = this.#store.formattedItems;
   readonly isMobileView = this.#store.isMobileView;
+  readonly isDofusLabLoading = this.#store.dofusLabLoading;
 
   readonly isFormSubmitted = signal<boolean>(false);
 
   filteredOptions$: Observable<FormattedItem[]> = of([]);
+
+  constructor() {
+    effect(() => {
+      if (this.#store.dofusLabItems().length) {
+        this.isFormSubmitted.set(true);
+      }
+    });
+  }
 
   readonly inputs: {
     equipment: {
@@ -178,6 +188,18 @@ export class GearPageComponent {
       this.isFormSubmitted.set(true);
     } else {
       this.#store.clearFormattedResources();
+    }
+  }
+
+  onDofusLabInputChange(value: string): void {
+    const validUrlCheck: RegExp =
+      /^(https:\/\/dofuslab\.io\/[a-zA-Z0-9\-\/]+)\/?$/;
+    const isValidURL: boolean = validUrlCheck.test(value);
+
+    if (isValidURL) {
+      const buildId: string = value.split('/').filter(Boolean).pop() ?? '';
+      this.#store.fetchDofusLabItems(buildId);
+      this.equipmentForm.reset();
     }
   }
 

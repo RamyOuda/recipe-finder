@@ -8,25 +8,30 @@ import {
   FormattedItems,
   FormattedResource,
   FormattedResourceResponse,
+  FormattedSearchResponse,
 } from '../models/app.model';
 import { AppService } from './app.service';
 
 interface AppState {
   pageLoading: boolean;
   resourcesLoading: boolean;
+  dofusLabLoading: boolean;
   formattedItems: FormattedItems | null;
   formattedResources: FormattedResourceResponse[];
   isMobileView: boolean;
   networkErrorDetected: boolean;
+  dofusLabItems: FormattedSearchResponse[];
 }
 
 const initialState: AppState = {
   pageLoading: false,
   resourcesLoading: false,
+  dofusLabLoading: false,
   formattedItems: null,
   formattedResources: [],
   isMobileView: window.innerWidth <= 1000,
   networkErrorDetected: false,
+  dofusLabItems: [],
 };
 
 export const AppStore = signalStore(
@@ -50,20 +55,19 @@ export const AppStore = signalStore(
           return service.fetchData().pipe(
             tapResponse({
               next: (formattedItems: FormattedItems) => {
-                patchState(store, {
-                  formattedItems,
-                  pageLoading: false,
-                });
+                patchState(store, { formattedItems });
               },
               error: (err: HttpErrorResponse) => {
                 console.error(err.message);
 
                 patchState(store, {
-                  pageLoading: false,
                   networkErrorDetected: true,
                 });
 
                 return EMPTY;
+              },
+              finalize: () => {
+                patchState(store, { pageLoading: false });
               },
             }),
           );
@@ -76,25 +80,68 @@ export const AppStore = signalStore(
         tap(() => {
           patchState(store, { resourcesLoading: true });
         }),
-        switchMap((resources) => {
+        switchMap((resources: FormattedResource[]) => {
           return service.fetchResources(resources).pipe(
             tapResponse({
               next: (formattedResources: FormattedResourceResponse[]) => {
-                patchState(store, {
-                  formattedResources,
-                  resourcesLoading: false,
-                });
+                patchState(store, { formattedResources });
               },
               error: (err: HttpErrorResponse) => {
                 console.error(err.message);
 
                 patchState(store, {
-                  resourcesLoading: false,
                   formattedResources: [],
                   networkErrorDetected: true,
                 });
 
                 return EMPTY;
+              },
+              finalize: () => {
+                patchState(store, { resourcesLoading: false });
+              },
+            }),
+          );
+        }),
+      ),
+    ),
+  })),
+  withMethods((store, service = inject(AppService)) => ({
+    fetchDofusLabItems: rxMethod<string>(
+      pipe(
+        tap(() => {
+          patchState(store, { dofusLabLoading: true });
+        }),
+        switchMap((buildId: string) => {
+          return service.fetchDofusLab(buildId).pipe(
+            tapResponse({
+              next: (dofusLabItems: FormattedSearchResponse[]) => {
+                patchState(store, { dofusLabItems });
+
+                const formattedResources: FormattedResource[] = dofusLabItems
+                  .flatMap((item: FormattedSearchResponse) => item.recipe)
+                  .reduce(
+                    (acc: FormattedResource[], curr: FormattedResource) => {
+                      const existing = acc.find((item) => item.id === curr.id);
+
+                      if (existing) {
+                        existing.quantity += curr.quantity;
+                      } else {
+                        acc.push({ ...curr });
+                      }
+
+                      return acc;
+                    },
+                    [],
+                  );
+
+                store.fetchResources(formattedResources);
+              },
+              error: (err: HttpErrorResponse) => {
+                console.error(err.message);
+                return EMPTY;
+              },
+              finalize: () => {
+                patchState(store, { dofusLabLoading: false });
               },
             }),
           );

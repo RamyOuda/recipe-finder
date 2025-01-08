@@ -1,3 +1,5 @@
+import { ApolloQueryResult } from '@apollo/client/core';
+
 export interface FormattedItems {
   hat: FormattedItem[];
   cloak: FormattedItem[];
@@ -54,4 +56,33 @@ export interface FormattedResourceResponse {
   imageUrl: string;
   quantity: number;
   subtype: string;
+}
+
+export interface SearchResponse {
+  image_urls: {
+    icon: string;
+  };
+  name: string;
+  recipe: RecipeResponse[];
+}
+
+export interface FormattedSearchResponse {
+  imageUrl: string;
+  name: string;
+  recipe: FormattedResource[];
+}
+
+export interface ApolloDofusLabResponse
+  extends ApolloQueryResult<DofusLabResponse> {
+  data: DofusLabResponse;
+}
+
+export interface DofusLabResponse {
+  customSetById: {
+    equippedItems: {
+      item: {
+        name: string;
+      };
+    }[];
+  };
 }

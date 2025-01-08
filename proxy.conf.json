@@ -1,0 +1,10 @@
+{
+  "/graphql": {
+    "target": "https://dofuslab.io",
+    "secure": false,
+    "changeOrigin": true,
+    "pathRewrite": {
+      "^/graphql": "/api/graphql"
+    }
+  }
+}

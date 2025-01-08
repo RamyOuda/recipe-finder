@@ -1,6 +1,6 @@
 import { Clipboard } from '@angular/cdk/clipboard';
 import { DecimalPipe } from '@angular/common';
-import { Component, inject, output } from '@angular/core';
+import { Component, computed, effect, inject, output } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -28,6 +28,20 @@ export class RequiredResourcesComponent {
   readonly resourcesLoading = this.#store.resourcesLoading;
   readonly formattedResources = this.#store.formattedResources;
   readonly isMobileView = this.#store.isMobileView;
+  readonly dofusLabItems = this.#store.dofusLabItems;
+
+  readonly dofusLabPopulated = computed<boolean>(
+    () => !!this.dofusLabItems().length,
+  );
+  readonly itemImages = computed<{ name: string; imageUrl: string }[]>(() =>
+    this.dofusLabItems().map(({ name, imageUrl }) => ({ name, imageUrl })),
+  );
+
+  constructor() {
+    effect(() => {
+      console.log(this.itemImages());
+    });
+  }
 
   backToForm(): void {
     this.backEvent.emit();
