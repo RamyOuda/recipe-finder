@@ -1,10 +1,11 @@
 import { Clipboard } from '@angular/cdk/clipboard';
 import { DecimalPipe } from '@angular/common';
-import { Component, computed, effect, inject, output } from '@angular/core';
+import { Component, computed, inject, input, output } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { FormattedItem } from '../../models/app.model';
 import { AppStore } from '../../store/app.store';
 
 @Component({
@@ -19,6 +20,7 @@ import { AppStore } from '../../store/app.store';
   styleUrl: './required-resources.component.scss',
 })
 export class RequiredResourcesComponent {
+  readonly submittedItems = input.required<FormattedItem[]>();
   readonly backEvent = output<void>();
 
   readonly #store = inject(AppStore);
@@ -33,15 +35,14 @@ export class RequiredResourcesComponent {
   readonly dofusLabPopulated = computed<boolean>(
     () => !!this.dofusLabItems().length,
   );
-  readonly itemImages = computed<{ name: string; imageUrl: string }[]>(() =>
-    this.dofusLabItems().map(({ name, imageUrl }) => ({ name, imageUrl })),
-  );
+  readonly itemImages = computed<{ name: string; imageUrl: string }[]>(() => {
+    const formItems = this.submittedItems();
+    const dofusLabItems = this.dofusLabItems();
 
-  constructor() {
-    effect(() => {
-      console.log(this.itemImages());
-    });
-  }
+    const items = dofusLabItems.length ? dofusLabItems : formItems;
+
+    return items.map(({ name, imageUrl }) => ({ name, imageUrl }));
+  });
 
   backToForm(): void {
     this.backEvent.emit();

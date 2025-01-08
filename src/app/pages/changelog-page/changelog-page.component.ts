@@ -12,11 +12,11 @@ export class ChangelogPageComponent {
     date: string;
     changes: string[];
   }[] = [
-    // {
-    //   version: '0.4.0',
-    //   date: 'Jan 8, 2025',
-    //   changes: ['Users can now import builds from DofusLab'],
-    // },
+    {
+      version: '0.3.1',
+      date: 'Jan 8, 2025',
+      changes: ['Selected gear now displays over required resources'],
+    },
     {
       version: '0.3.0',
       date: 'Jan 5, 2025',

@@ -127,7 +127,12 @@
 }
 
 @if (!mobileView || formSubmitted) {
+  @let items = submittedItems();
+
   <section class="required-resources">
-    <app-required-resources (backEvent)="backToForm()"></app-required-resources>
+    <app-required-resources
+      [submittedItems]="items"
+      (backEvent)="backToForm()"
+    ></app-required-resources>
   </section>
 }

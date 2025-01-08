@@ -57,6 +57,7 @@ export class GearPageComponent {
   readonly isDofusLabLoading = this.#store.dofusLabLoading;
 
   readonly isFormSubmitted = signal<boolean>(false);
+  readonly submittedItems = signal<FormattedItem[]>([]);
 
   filteredOptions$: Observable<FormattedItem[]> = of([]);
 
@@ -155,6 +156,7 @@ export class GearPageComponent {
   onSubmit(): void {
     const formValue = this.equipmentForm.value;
     const requiredResources: FormattedResource[] = [];
+    const submittedItems: FormattedItem[] = [];
 
     Object.values(formValue).forEach((formGroup) => {
       Object.values(formGroup)
@@ -163,6 +165,8 @@ export class GearPageComponent {
             item && typeof item === 'object',
         )
         .forEach((equipment: FormattedItem | any) => {
+          submittedItems.push(equipment);
+
           equipment.recipe.forEach((resource: FormattedResource) => {
             const index: number = requiredResources.findIndex(
               ({ id }) => id === resource.id,
@@ -184,8 +188,9 @@ export class GearPageComponent {
     });
 
     if (requiredResources.length) {
-      this.#store.fetchResources(requiredResources);
+      this.submittedItems.set(submittedItems);
       this.isFormSubmitted.set(true);
+      this.#store.fetchResources(requiredResources);
     } else {
       this.#store.clearFormattedResources();
     }

@@ -35,7 +35,7 @@
       </button>
     </div>
 
-    @if (!mobileView && isFromLab) {
+    @if (!mobileView) {
       <div class="gear-icons">
         @let images = itemImages();
         @for (image of images; track $index) {
