@@ -1,11 +1,11 @@
 @let mobileView = isMobileView();
 @let formSubmitted = isFormSubmitted();
-@let dofusLabLoading = isDofusLabLoading();
+<!-- @let dofusLabLoading = isDofusLabLoading(); -->
 
 @if (!mobileView || !formSubmitted) {
   <section class="form-container">
     <form [formGroup]="equipmentForm" class="resource-form">
-      <div class="dofuslab-container">
+      <!-- <div class="dofuslab-container">
         <mat-form-field class="dofuslab-input">
           <mat-label>(Optional) Paste your DofusLab build URL!</mat-label>
           <input
@@ -19,7 +19,7 @@
         @if (dofusLabLoading) {
           <mat-spinner class="dofuslab-spinner"></mat-spinner>
         }
-      </div>
+      </div> -->
 
       <div formGroupName="equipment" class="form-group-equipment">
         <h3 class="form-group-header">Gear</h3>
