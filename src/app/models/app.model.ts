@@ -47,6 +47,7 @@ export interface ResourceResponse {
     icon: string;
   };
   name: string;
+  level: number;
 }
 
 export interface FormattedResourceResponse {
@@ -54,4 +55,5 @@ export interface FormattedResourceResponse {
   imageUrl: string;
   quantity: number;
   subtype: string;
+  level: number;
 }

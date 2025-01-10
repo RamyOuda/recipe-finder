@@ -98,6 +98,7 @@ export class AppService {
             map((response: ResourceResponse) => ({
               name: response.name,
               imageUrl: response.image_urls.icon,
+              level: response.level,
               quantity,
               subtype,
             })),

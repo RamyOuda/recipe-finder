@@ -39,30 +39,12 @@
       </div>
     }
 
-    <div class="resource-container">
-      @for (resource of resources; track $index) {
-        <div class="resource">
-          <div class="image-container">
-            @if (resource.subtype === "equipment") {
-              <i
-                class="fa-solid fa-circle-exclamation"
-                matTooltip="This is an equipment item"
-                matTooltipPosition="above"
-              ></i>
-            }
-
-            <img
-              class="resource-image"
-              [src]="resource.imageUrl"
-              alt="resource"
-            />
-          </div>
-          <span class="resource-name">{{ resource.name }}</span>
-          <span class="resource-quantity"
-            >x{{ resource.quantity | number: "1.0-0" }}</span
-          >
-        </div>
-      }
+    <div data-ag-theme-mode="dark">
+      <ag-grid-angular
+        style="height: 502px"
+        [rowData]="resources"
+        [columnDefs]="colDefs"
+      />
     </div>
   } @else {
     <div class="await-resources">

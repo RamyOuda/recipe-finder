@@ -32,43 +32,6 @@
     }
   }
 
-  .resource-container {
-    max-height: 440px;
-    overflow-y: auto;
-
-    border: 2px solid cyan;
-    border-radius: 4px;
-    padding: 16px;
-
-    .resource {
-      display: flex;
-      align-items: center;
-      gap: 16px;
-      font-size: 20px;
-      border-bottom: 1px dotted gray;
-
-      .image-container {
-        display: flex;
-        align-items: center;
-        justify-content: end;
-        width: 60px;
-        gap: 4px;
-
-        .resource-image {
-          height: 32px;
-        }
-      }
-
-      &-name {
-        flex: 2;
-      }
-
-      &-quantity {
-        flex: 1;
-      }
-    }
-  }
-
   .await-resources {
     display: flex;
     flex-direction: column;
