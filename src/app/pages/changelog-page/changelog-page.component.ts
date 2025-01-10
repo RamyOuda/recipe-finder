@@ -15,7 +15,10 @@ export class ChangelogPageComponent {
     {
       version: '0.3.2',
       date: 'Jan 9, 2025',
-      changes: ['Added reset button to Gear form'],
+      changes: [
+        'Added reset button to Gear form',
+        'Resources now display in a sortable table',
+      ],
     },
     {
       version: '0.3.1',
