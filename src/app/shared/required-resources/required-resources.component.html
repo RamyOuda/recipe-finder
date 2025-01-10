@@ -1,7 +1,6 @@
 @let mobileView = isMobileView();
 @let loading = resourcesLoading();
 @let resources = formattedResources();
-@let isFromLab = dofusLabPopulated();
 
 @if (loading) {
   <div class="resource-spinner">
@@ -9,18 +8,7 @@
   </div>
 } @else {
   @if (resources.length) {
-    <h2>
-      Required Materials
-
-      @if (isFromLab) {
-        <img
-          src="https://d2iuiayak06k8j.cloudfront.net/logo/DL-Full_Dark.svg"
-          alt="DofusLab"
-          class="dofuslab-logo"
-        />
-      }
-    </h2>
-
+    <h2>Required Materials</h2>
     <div class="recipe-actions">
       @if (mobileView) {
         <button mat-raised-button color="primary" (click)="backToForm()">

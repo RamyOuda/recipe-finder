@@ -30,19 +30,10 @@ export class RequiredResourcesComponent {
   readonly resourcesLoading = this.#store.resourcesLoading;
   readonly formattedResources = this.#store.formattedResources;
   readonly isMobileView = this.#store.isMobileView;
-  readonly dofusLabItems = this.#store.dofusLabItems;
 
-  readonly dofusLabPopulated = computed<boolean>(
-    () => !!this.dofusLabItems().length,
+  readonly itemImages = computed<{ name: string; imageUrl: string }[]>(() =>
+    this.submittedItems().map(({ name, imageUrl }) => ({ name, imageUrl })),
   );
-  readonly itemImages = computed<{ name: string; imageUrl: string }[]>(() => {
-    const formItems = this.submittedItems();
-    const dofusLabItems = this.dofusLabItems();
-
-    const items = dofusLabItems.length ? dofusLabItems : formItems;
-
-    return items.map(({ name, imageUrl }) => ({ name, imageUrl }));
-  });
 
   backToForm(): void {
     this.backEvent.emit();

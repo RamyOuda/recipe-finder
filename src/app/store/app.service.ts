@@ -1,27 +1,19 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { Apollo } from 'apollo-angular';
-import { forkJoin, map, Observable, switchMap } from 'rxjs';
+import { forkJoin, map, Observable } from 'rxjs';
 import {
-  ApolloDofusLabResponse,
-  DofusLabResponse,
   FormattedItem,
   FormattedItems,
   FormattedResource,
   FormattedResourceResponse,
-  FormattedSearchResponse,
   ItemResponse,
   RecipeResponse,
   ResourceResponse,
-  SearchResponse,
 } from '../models/app.model';
-import { dofusLabQuery } from './app.query';
 
 @Injectable({ providedIn: 'root' })
 export class AppService {
   readonly #http = inject(HttpClient);
-  readonly #apollo = inject(Apollo);
-
   readonly baseUrl = 'https://api.dofusdu.de/dofus3/v1/en';
 
   fetchData(): Observable<FormattedItems> {
@@ -112,54 +104,5 @@ export class AppService {
           ),
       ),
     );
-  }
-
-  fetchDofusLab(buildId: string): Observable<FormattedSearchResponse[]> {
-    return this.#apollo
-      .query<DofusLabResponse>({
-        query: dofusLabQuery,
-        variables: { id: buildId },
-      })
-      .pipe(
-        map((response: ApolloDofusLabResponse) =>
-          response.data.customSetById.equippedItems.map(
-            ({ item }) => item.name,
-          ),
-        ),
-        switchMap((itemNames: string[]) =>
-          forkJoin(
-            itemNames.map((itemName: string) =>
-              this.#http
-                .get<
-                  SearchResponse[]
-                >(`${this.baseUrl}/items/equipment/search?query=${encodeURIComponent(itemName)}`)
-                .pipe(
-                  map((items: SearchResponse[]) =>
-                    items.filter((item) => item.recipe).shift(),
-                  ),
-                ),
-            ),
-          ).pipe(
-            map((items) => items.filter(Boolean)),
-            map((items: SearchResponse[] | any) =>
-              items.map((item: SearchResponse) => {
-                const recipe: FormattedResource[] = item.recipe.map(
-                  (rec: RecipeResponse) => ({
-                    id: rec.item_ankama_id,
-                    subtype: rec.item_subtype,
-                    quantity: rec.quantity,
-                  }),
-                );
-
-                return {
-                  imageUrl: item.image_urls.icon,
-                  name: item.name,
-                  recipe,
-                };
-              }),
-            ),
-          ),
-        ),
-      );
   }
 }

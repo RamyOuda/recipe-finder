@@ -1,29 +1,11 @@
 @let mobileView = isMobileView();
 @let formSubmitted = isFormSubmitted();
-<!-- @let dofusLabLoading = isDofusLabLoading(); -->
 
 @if (!mobileView || !formSubmitted) {
   <section class="form-container">
     <form [formGroup]="equipmentForm" class="resource-form">
-      <!-- <div class="dofuslab-container">
-        <mat-form-field class="dofuslab-input">
-          <mat-label>(Optional) Paste your DofusLab build URL!</mat-label>
-          <input
-            #dofuslab
-            matInput
-            type="url"
-            (input)="onDofusLabInputChange(dofuslab.value)"
-          />
-        </mat-form-field>
-
-        @if (dofusLabLoading) {
-          <mat-spinner class="dofuslab-spinner"></mat-spinner>
-        }
-      </div> -->
-
       <div formGroupName="equipment" class="form-group-equipment">
         <h3 class="form-group-header">Gear</h3>
-
         <div class="form-inputs-container">
           @for (input of inputs.equipment; track $index) {
             <mat-form-field class="form-field" appearance="outline">
