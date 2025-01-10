@@ -95,15 +95,26 @@
         </div>
       </div>
 
-      <button
-        class="form-submit"
-        mat-raised-button
-        color="primary"
-        type="submit"
-        (click)="onSubmit()"
-      >
-        Submit
-      </button>
+      <div class="form-actions">
+        <button
+          class="form-reset"
+          mat-stroked-button
+          color="primary"
+          type="reset"
+          (click)="resetForm()"
+        >
+          Reset
+        </button>
+        <button
+          class="form-submit"
+          mat-raised-button
+          color="primary"
+          type="submit"
+          (click)="onSubmit()"
+        >
+          Submit
+        </button>
+      </div>
     </form>
   </section>
 }

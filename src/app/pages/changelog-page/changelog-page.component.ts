@@ -13,9 +13,16 @@ export class ChangelogPageComponent {
     changes: string[];
   }[] = [
     {
+      version: '0.3.2',
+      date: 'Jan 9, 2025',
+      changes: ['Added reset button to Gear form'],
+    },
+    {
       version: '0.3.1',
       date: 'Jan 8, 2025',
-      changes: ['Selected gear now displays over required resources'],
+      changes: [
+        'Selected gear now displays over required resources on the Gear page',
+      ],
     },
     {
       version: '0.3.0',

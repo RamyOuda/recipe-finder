@@ -186,6 +186,10 @@ export class GearPageComponent {
     }
   }
 
+  resetForm(): void {
+    this.equipmentForm.reset();
+  }
+
   backToForm(): void {
     this.isFormSubmitted.set(false);
   }

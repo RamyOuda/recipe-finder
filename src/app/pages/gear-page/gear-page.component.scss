@@ -49,8 +49,18 @@
         }
       }
 
-      .form-submit {
-        width: 200px;
+      .form-actions {
+        display: flex;
+        justify-content: flex-end;
+        gap: 16px;
+
+        .form-reset {
+          width: 192px;
+        }
+
+        .form-submit {
+          width: 192px;
+        }
       }
     }
   }
@@ -79,11 +89,24 @@
             }
           }
         }
+
+        .form-actions {
+          .form-reset {
+            flex: 1;
+            width: unset;
+          }
+
+          .form-submit {
+            flex: 1;
+            width: unset;
+          }
+        }
       }
     }
   }
 }
 
+// Material Override
 .mat-option-container {
   display: flex;
   align-items: center;
