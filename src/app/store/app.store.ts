@@ -5,6 +5,7 @@ import { patchState, signalStore, withMethods, withState } from '@ngrx/signals';
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
 import { EMPTY, pipe, switchMap, tap } from 'rxjs';
 import {
+  ConsumableCategories,
   FormattedEquipment,
   FormattedResource,
   FormattedResourceResponse,
@@ -18,7 +19,7 @@ interface AppState {
   isNetworkErrorDetected: boolean;
 
   formattedEquipment: FormattedEquipment | null;
-  formattedConsumables: any;
+  formattedConsumables: ConsumableCategories | null;
   formattedResources: FormattedResourceResponse[];
 }
 
@@ -82,7 +83,7 @@ export const AppStore = signalStore(
         switchMap(() => {
           return service.fetchConsumableData().pipe(
             tapResponse({
-              next: (formattedConsumables: any) => {
+              next: (formattedConsumables: ConsumableCategories) => {
                 patchState(store, { formattedConsumables });
               },
               error: (err: HttpErrorResponse) => {
