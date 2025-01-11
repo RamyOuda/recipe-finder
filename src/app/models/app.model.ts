@@ -18,36 +18,10 @@ export interface FormattedItem {
   type: string;
 }
 
-export interface ItemResponse {
-  image_urls: {
-    icon: string;
-  };
-  is_weapon: boolean;
-  name: string;
-  recipe: RecipeResponse[];
-  type: {
-    name: string;
-  };
-}
-
-export interface RecipeResponse {
-  item_ankama_id: number;
-  item_subtype: string;
-  quantity: number;
-}
-
 export interface FormattedResource {
   id: number;
   subtype: string;
   quantity: number;
-}
-
-export interface ResourceResponse {
-  image_urls: {
-    icon: string;
-  };
-  name: string;
-  level: number;
 }
 
 export interface FormattedResourceResponse {
@@ -56,4 +30,17 @@ export interface FormattedResourceResponse {
   quantity: number;
   subtype: string;
   level: number;
+}
+
+export interface FormattedConsumable {
+  id: number;
+  imageUrl: string;
+  level: number;
+  name: string;
+  recipe: FormattedResource[];
+  type: string;
+}
+
+export interface ConsumableCategories {
+  [k: string]: FormattedConsumable[];
 }

@@ -4,8 +4,8 @@ import {
   inject,
   OnInit,
 } from '@angular/core';
-import { AppStore } from '../../store/app.store';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { AppStore } from '../../store/app.store';
 
 @Component({
   selector: 'app-consumables-page',
@@ -17,8 +17,11 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 export class ConsumablesPageComponent implements OnInit {
   readonly #store = inject(AppStore);
   readonly isPageLoading = this.#store.isPageLoading;
+  readonly formattedConsumables = this.#store.formattedConsumables;
 
   ngOnInit(): void {
-    this.#store.fetchConsumableData();
+    if (!this.formattedConsumables()) {
+      this.#store.fetchConsumableData();
+    }
   }
 }

@@ -2,14 +2,19 @@ import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { forkJoin, map, Observable, tap } from 'rxjs';
 import {
+  ConsumableCategories,
+  FormattedConsumable,
   FormattedEquipment,
   FormattedItem,
   FormattedResource,
   FormattedResourceResponse,
+} from '../models/app.model';
+import {
+  ConsumablesResponse,
   ItemResponse,
   RecipeResponse,
   ResourceResponse,
-} from '../models/app.model';
+} from '../models/service.models';
 
 @Injectable({ providedIn: 'root' })
 export class AppService {
@@ -87,12 +92,50 @@ export class AppService {
       );
   }
 
-  fetchConsumableData(): Observable<any> {
-    return this.#http.get<any>(`${this.baseUrl}/items/consumables/all`).pipe(
-      tap((response) => {
-        console.log(response);
-      }),
-    );
+  fetchConsumableData(): Observable<ConsumableCategories> {
+    return this.#http
+      .get<{
+        items: ConsumablesResponse[];
+      }>(`${this.baseUrl}/items/consumables/all`)
+      .pipe(
+        map(({ items }) => {
+          const formattedConsumables: FormattedConsumable[] = items
+            .filter(({ recipe }) => !!recipe)
+            .map((consumable: ConsumablesResponse) => {
+              const formattedRecipe: FormattedResource[] =
+                consumable.recipe.map((resource: RecipeResponse) => ({
+                  id: resource.item_ankama_id,
+                  subtype: resource.item_subtype,
+                  quantity: resource.quantity,
+                }));
+
+              return {
+                id: consumable.ankama_id,
+                imageUrl: consumable.image_urls.icon,
+                level: consumable.level,
+                name: consumable.name,
+                recipe: formattedRecipe,
+                type: consumable.type.name,
+              };
+            });
+
+          return formattedConsumables.reduce(
+            (acc: ConsumableCategories, curr: FormattedConsumable) => {
+              const key: string = curr.type
+                .toLowerCase()
+                .replace(/(?:^\w| \w)/g, (match: string, offset: number) =>
+                  offset === 0 ? match.trim() : match.trim().toUpperCase(),
+                );
+
+              return acc[key] ? acc[key].push(curr) : (acc[key] = [curr]), acc;
+            },
+            {},
+          );
+        }),
+        tap((response) => {
+          console.log(response);
+        }),
+      );
   }
 
   fetchResources(
