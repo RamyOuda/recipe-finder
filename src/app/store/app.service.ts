@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { forkJoin, map, Observable, tap } from 'rxjs';
+import { forkJoin, map, Observable } from 'rxjs';
 import {
   ConsumableCategories,
   FormattedConsumable,
@@ -131,9 +131,6 @@ export class AppService {
             },
             {},
           );
-        }),
-        tap((response) => {
-          console.log(response);
         }),
       );
   }
