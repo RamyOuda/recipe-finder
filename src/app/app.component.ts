@@ -4,11 +4,9 @@ import {
   Component,
   effect,
   inject,
-  OnInit,
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatButtonModule } from '@angular/material/button';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { NavigationEnd, Router, RouterModule } from '@angular/router';
@@ -26,7 +24,6 @@ interface ResizeEvent {
   imports: [
     CommonModule,
     RouterModule,
-    MatProgressSpinnerModule,
     MatToolbarModule,
     MatButtonModule,
     MatSidenavModule,
@@ -36,13 +33,12 @@ interface ResizeEvent {
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class AppComponent implements OnInit {
+export class AppComponent {
   readonly #store = inject(AppStore);
   readonly #router = inject(Router);
 
-  readonly pageLoading = this.#store.pageLoading;
   readonly isMobileView = this.#store.isMobileView;
-  readonly networkErrorDetected = this.#store.networkErrorDetected;
+  readonly isNetworkErrorDetected = this.#store.isNetworkErrorDetected;
 
   readonly resize$: Observable<ResizeEvent> = fromEvent<ResizeEvent>(
     window,
@@ -51,7 +47,7 @@ export class AppComponent implements OnInit {
 
   constructor() {
     effect(() => {
-      if (this.networkErrorDetected()) {
+      if (this.isNetworkErrorDetected()) {
         this.#router.navigate(['/error']);
       }
     });
@@ -65,9 +61,5 @@ export class AppComponent implements OnInit {
         this.#store.clearFormattedResources();
       }
     });
-  }
-
-  ngOnInit(): void {
-    this.#store.fetchData();
   }
 }

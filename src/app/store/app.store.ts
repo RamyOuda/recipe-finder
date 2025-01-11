@@ -5,28 +5,32 @@ import { patchState, signalStore, withMethods, withState } from '@ngrx/signals';
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
 import { EMPTY, pipe, switchMap, tap } from 'rxjs';
 import {
-  FormattedItems,
+  FormattedEquipment,
   FormattedResource,
   FormattedResourceResponse,
 } from '../models/app.model';
 import { AppService } from './app.service';
 
 interface AppState {
-  pageLoading: boolean;
-  resourcesLoading: boolean;
-  formattedItems: FormattedItems | null;
-  formattedResources: FormattedResourceResponse[];
+  isPageLoading: boolean;
+  isResourcesLoading: boolean;
   isMobileView: boolean;
-  networkErrorDetected: boolean;
+  isNetworkErrorDetected: boolean;
+
+  formattedEquipment: FormattedEquipment | null;
+  formattedConsumables: any;
+  formattedResources: FormattedResourceResponse[];
 }
 
 const initialState: AppState = {
-  pageLoading: false,
-  resourcesLoading: false,
-  formattedItems: null,
-  formattedResources: [],
+  isPageLoading: false,
+  isResourcesLoading: false,
   isMobileView: window.innerWidth <= 1000,
-  networkErrorDetected: false,
+  isNetworkErrorDetected: false,
+
+  formattedEquipment: null,
+  formattedConsumables: null,
+  formattedResources: [],
 };
 
 export const AppStore = signalStore(
@@ -41,28 +45,57 @@ export const AppStore = signalStore(
       patchState(store, { formattedResources: [] });
     },
 
-    fetchData: rxMethod<void>(
+    fetchEquipmentData: rxMethod<void>(
       pipe(
         tap(() => {
-          patchState(store, { pageLoading: true });
+          patchState(store, { isPageLoading: true });
         }),
         switchMap(() => {
-          return service.fetchData().pipe(
+          return service.fetchEquipmentData().pipe(
             tapResponse({
-              next: (formattedItems: FormattedItems) => {
-                patchState(store, { formattedItems });
+              next: (formattedEquipment: FormattedEquipment) => {
+                patchState(store, { formattedEquipment });
               },
               error: (err: HttpErrorResponse) => {
                 console.error(err.message);
 
                 patchState(store, {
-                  networkErrorDetected: true,
+                  isNetworkErrorDetected: true,
                 });
 
                 return EMPTY;
               },
               finalize: () => {
-                patchState(store, { pageLoading: false });
+                patchState(store, { isPageLoading: false });
+              },
+            }),
+          );
+        }),
+      ),
+    ),
+
+    fetchConsumableData: rxMethod<void>(
+      pipe(
+        tap(() => {
+          patchState(store, { isPageLoading: true });
+        }),
+        switchMap(() => {
+          return service.fetchConsumableData().pipe(
+            tapResponse({
+              next: (formattedConsumables: any) => {
+                patchState(store, { formattedConsumables });
+              },
+              error: (err: HttpErrorResponse) => {
+                console.error(err.message);
+
+                patchState(store, {
+                  isNetworkErrorDetected: true,
+                });
+
+                return EMPTY;
+              },
+              finalize: () => {
+                patchState(store, { isPageLoading: false });
               },
             }),
           );
@@ -73,7 +106,7 @@ export const AppStore = signalStore(
     fetchResources: rxMethod<FormattedResource[]>(
       pipe(
         tap(() => {
-          patchState(store, { resourcesLoading: true });
+          patchState(store, { isResourcesLoading: true });
         }),
         switchMap((resources: FormattedResource[]) => {
           return service.fetchResources(resources).pipe(
@@ -86,13 +119,13 @@ export const AppStore = signalStore(
 
                 patchState(store, {
                   formattedResources: [],
-                  networkErrorDetected: true,
+                  isNetworkErrorDetected: true,
                 });
 
                 return EMPTY;
               },
               finalize: () => {
-                patchState(store, { resourcesLoading: false });
+                patchState(store, { isResourcesLoading: false });
               },
             }),
           );

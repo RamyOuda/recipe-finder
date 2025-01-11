@@ -14,7 +14,7 @@ export class ErrorGuard implements CanActivate {
   readonly #store = inject(AppStore);
   readonly #router = inject(Router);
 
-  readonly networkErrorDetected = this.#store.networkErrorDetected;
+  readonly networkErrorDetected = this.#store.isNetworkErrorDetected;
 
   canActivate(
     _route: ActivatedRouteSnapshot,

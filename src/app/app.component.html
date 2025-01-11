@@ -1,10 +1,7 @@
-@let loading = pageLoading();
-@let mobileView = isMobileView();
-
 <header>
   <mat-toolbar>
     <section class="menu-title-nav">
-      @if (mobileView) {
+      @if (isMobileView()) {
         <button mat-icon-button aria-label="Menu" (click)="drawer.toggle()">
           <i class="fa-solid fa-bars"></i>
         </button>
@@ -15,7 +12,7 @@
         <img src="cawwot.png" alt="Cawwot" />
       </a>
 
-      @if (!mobileView) {
+      @if (!isMobileView()) {
         <ng-container [ngTemplateOutlet]="navList"></ng-container>
       }
     </section>
@@ -39,18 +36,11 @@
   <mat-drawer #drawer mode="over">
     <ng-container [ngTemplateOutlet]="navList"></ng-container>
   </mat-drawer>
-
-  @if (loading) {
-    <div class="spinner-container">
-      <mat-spinner></mat-spinner>
-    </div>
-  } @else {
-    <router-outlet></router-outlet>
-  }
+  <router-outlet></router-outlet>
 </mat-drawer-container>
 
 <ng-template #navList>
-  <div [ngClass]="mobileView ? 'nav-links-mobile' : 'nav-links-desktop'">
+  <div [ngClass]="isMobileView() ? 'nav-links-mobile' : 'nav-links-desktop'">
     <section>
       <a
         mat-button
@@ -66,7 +56,6 @@
         routerLinkActive="active"
         aria-label="Consumables"
         (click)="drawer.close()"
-        disabled="true"
         ><i class="fa-solid fa-flask"></i> Consumables</a
       >
     </section>

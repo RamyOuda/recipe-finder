@@ -1,4 +1,4 @@
-export interface FormattedItems {
+export interface FormattedEquipment {
   hat: FormattedItem[];
   cloak: FormattedItem[];
   belt: FormattedItem[];

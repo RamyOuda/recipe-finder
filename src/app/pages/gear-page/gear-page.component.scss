@@ -2,8 +2,15 @@
   display: flex;
   gap: 32px;
   padding: 16px;
-  box-sizing: border-box;
   flex-grow: 1;
+  height: 100%;
+
+  .spinner-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+  }
 
   .form-container {
     flex: 1;
@@ -15,7 +22,7 @@
 
       .form-group-equipment {
         .form-group-header {
-          margin-top: 0;
+          margin-bottom: 8px;
         }
 
         .form-inputs-container {
@@ -34,6 +41,10 @@
       }
 
       .form-group-trophies {
+        .form-group-header {
+          margin: 16px 0;
+        }
+
         .form-inputs-container {
           display: flex;
           flex-wrap: wrap;

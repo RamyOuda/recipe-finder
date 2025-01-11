@@ -31,7 +31,7 @@ export class RequiredResourcesComponent {
   readonly #clipboard = inject(Clipboard);
   readonly #snackbar = inject(MatSnackBar);
 
-  readonly resourcesLoading = this.#store.resourcesLoading;
+  readonly isResourcesLoading = this.#store.isResourcesLoading;
   readonly formattedResources = this.#store.formattedResources;
   readonly isMobileView = this.#store.isMobileView;
 
@@ -52,8 +52,8 @@ export class RequiredResourcesComponent {
       flex: 0.01,
       cellRenderer: (params: { value: string }) =>
         `
-          <div style="display: flex; justify-content: center; align-items: center; height: 100%;">
-            <img src="${params.value}" alt="Image" style="width: 32px; height: 32px;">
+        <div style="display: flex; justify-content: center; align-items: center; height: 100%;">
+          <img src="${params.value}" alt="Image" style="width: 32px; height: 32px;">
         </div>
         `,
     },

@@ -1,16 +1,12 @@
-@let mobileView = isMobileView();
-@let loading = resourcesLoading();
-@let resources = formattedResources();
-
-@if (loading) {
+@if (isResourcesLoading()) {
   <div class="resource-spinner">
     <mat-spinner></mat-spinner>
   </div>
 } @else {
-  @if (resources.length) {
+  @if (formattedResources().length) {
     <h2>Required Materials</h2>
     <div class="recipe-actions">
-      @if (mobileView) {
+      @if (isMobileView()) {
         <button mat-raised-button color="primary" (click)="backToForm()">
           Back to item selection
           <i class="fa-solid fa-rotate-left"></i>
@@ -23,10 +19,9 @@
       </button>
     </div>
 
-    @if (!mobileView) {
+    @if (!isMobileView()) {
       <div class="gear-icons">
-        @let images = itemImages();
-        @for (image of images; track $index) {
+        @for (image of itemImages(); track $index) {
           <div>
             <img
               [src]="image.imageUrl"
@@ -42,7 +37,7 @@
     <div data-ag-theme-mode="dark">
       <ag-grid-angular
         style="height: 502px"
-        [rowData]="resources"
+        [rowData]="formattedResources()"
         [columnDefs]="colDefs"
       />
     </div>

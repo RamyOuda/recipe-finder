@@ -1,9 +1,9 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { forkJoin, map, Observable } from 'rxjs';
+import { forkJoin, map, Observable, tap } from 'rxjs';
 import {
+  FormattedEquipment,
   FormattedItem,
-  FormattedItems,
   FormattedResource,
   FormattedResourceResponse,
   ItemResponse,
@@ -16,7 +16,7 @@ export class AppService {
   readonly #http = inject(HttpClient);
   readonly baseUrl = 'https://api.dofusdu.de/dofus3/v1/en';
 
-  fetchData(): Observable<FormattedItems> {
+  fetchEquipmentData(): Observable<FormattedEquipment> {
     const validCategories: string[] = [
       'hat',
       'cloak',
@@ -35,7 +35,7 @@ export class AppService {
           items
             .filter((item: ItemResponse) => item.recipe)
             .reduce(
-              (acc: FormattedItems, curr: ItemResponse) => {
+              (acc: FormattedEquipment, curr: ItemResponse) => {
                 const recipe: FormattedResource[] = curr.recipe.map(
                   (rec: RecipeResponse) => ({
                     id: rec.item_ankama_id,
@@ -75,7 +75,7 @@ export class AppService {
               },
             ),
         ),
-        map((items: FormattedItems) => {
+        map((items: FormattedEquipment) => {
           Object.values(items).forEach((category: FormattedItem[]) => {
             category.sort((a: FormattedItem, b: FormattedItem) =>
               a.name.localeCompare(b.name),
@@ -85,6 +85,14 @@ export class AppService {
           return items;
         }),
       );
+  }
+
+  fetchConsumableData(): Observable<any> {
+    return this.#http.get<any>(`${this.baseUrl}/items/consumables/all`).pipe(
+      tap((response) => {
+        console.log(response);
+      }),
+    );
   }
 
   fetchResources(

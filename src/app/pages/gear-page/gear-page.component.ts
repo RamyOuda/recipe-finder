@@ -3,6 +3,7 @@ import {
   ChangeDetectionStrategy,
   Component,
   inject,
+  OnInit,
   signal,
 } from '@angular/core';
 import {
@@ -21,7 +22,6 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { MatTooltipModule } from '@angular/material/tooltip';
 import { map, Observable, of, startWith } from 'rxjs';
 import { FormattedItem, FormattedResource } from '../../models/app.model';
 import { RequiredResourcesComponent } from '../../shared/required-resources/required-resources.component';
@@ -39,7 +39,6 @@ import { AppStore } from '../../store/app.store';
     MatIconModule,
     MatInputModule,
     MatProgressSpinnerModule,
-    MatTooltipModule,
     ReactiveFormsModule,
     RequiredResourcesComponent,
   ],
@@ -48,16 +47,23 @@ import { AppStore } from '../../store/app.store';
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class GearPageComponent {
+export class GearPageComponent implements OnInit {
   readonly #store = inject(AppStore);
 
-  readonly formattedItems = this.#store.formattedItems;
+  readonly formattedEquipment = this.#store.formattedEquipment;
   readonly isMobileView = this.#store.isMobileView;
+  readonly isPageLoading = this.#store.isPageLoading;
 
   readonly isFormSubmitted = signal<boolean>(false);
   readonly submittedItems = signal<FormattedItem[]>([]);
 
   filteredOptions$: Observable<FormattedItem[]> = of([]);
+
+  ngOnInit(): void {
+    if (!this.formattedEquipment()) {
+      this.#store.fetchEquipmentData();
+    }
+  }
 
   readonly inputs: {
     equipment: {
@@ -198,7 +204,7 @@ export class GearPageComponent {
     value: FormattedItem | string,
     itemType: string,
   ): FormattedItem[] {
-    const items = this.formattedItems();
+    const items = this.formattedEquipment();
     const filterValue = (
       typeof value === 'string' ? value : value.name
     ).toLowerCase();
