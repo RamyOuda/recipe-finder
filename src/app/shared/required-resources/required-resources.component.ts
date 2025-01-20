@@ -53,7 +53,7 @@ export class RequiredResourcesComponent {
       cellRenderer: (params: { value: string }) =>
         `
         <div style="display: flex; justify-content: center; align-items: center; height: 100%;">
-          <img src="${params.value}" alt="Image" style="width: 32px; height: 32px;">
+          <img src="${params.value}" alt="Image" loading="lazy" style="width: 32px; height: 32px;">
         </div>
         `,
     },

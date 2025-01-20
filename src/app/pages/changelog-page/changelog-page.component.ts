@@ -14,6 +14,11 @@ export class ChangelogPageComponent {
     changes: string[];
   }[] = [
     {
+      version: '0.3.3',
+      date: 'Jan 19, 2025',
+      changes: ['Added row selection to resource table'],
+    },
+    {
       version: '0.3.2',
       date: 'Jan 9, 2025',
       changes: [

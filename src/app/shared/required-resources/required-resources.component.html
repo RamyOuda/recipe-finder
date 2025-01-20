@@ -39,6 +39,7 @@
         style="height: 502px"
         [rowData]="formattedResources()"
         [columnDefs]="colDefs"
+        [rowSelection]="{ mode: 'multiRow' }"
       />
     </div>
   } @else {
