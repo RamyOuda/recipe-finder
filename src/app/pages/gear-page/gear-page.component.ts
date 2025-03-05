@@ -2,8 +2,11 @@ import { AsyncPipe } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
+  effect,
+  ElementRef,
   inject,
   OnInit,
+  Renderer2,
   signal,
 } from '@angular/core';
 import {
@@ -49,6 +52,8 @@ import { AppStore } from '../../store/app.store';
 })
 export class GearPageComponent implements OnInit {
   readonly #store = inject(AppStore);
+  readonly #renderer = inject(Renderer2);
+  readonly #hostElement = inject(ElementRef);
 
   readonly formattedEquipment = this.#store.formattedEquipment;
   readonly isMobileView = this.#store.isMobileView;
@@ -58,6 +63,17 @@ export class GearPageComponent implements OnInit {
   readonly submittedItems = signal<FormattedItem[]>([]);
 
   filteredOptions$: Observable<FormattedItem[]> = of([]);
+
+  constructor() {
+    effect(() => {
+      const height = this.isPageLoading() ? '100%' : 'fit-content';
+      this.#renderer.setStyle(
+        this.#hostElement.nativeElement,
+        'height',
+        height,
+      );
+    });
+  }
 
   ngOnInit(): void {
     if (!this.formattedEquipment()) {
